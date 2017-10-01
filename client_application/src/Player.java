@@ -52,4 +52,9 @@ public class Player {
     public String getPosition() {
         return position;
     }
+
+    @Override
+    public String toString() {
+        return number + ". " + firstname + " " + lastname;
+    }
 }
