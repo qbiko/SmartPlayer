@@ -14,13 +14,13 @@ namespace SmartPlayerAPI.Persistance
         {
         }
 
-        public DbSet<User> User { get; set; }
+        public DbSet<Club> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>().ToTable("User");
-            modelBuilder.Entity<User>().HasKey(i => i.Id);
+            modelBuilder.Entity<Club>().ToTable("User");
+            modelBuilder.Entity<Club>().HasKey(i => i.Id);
         }
     }
 }

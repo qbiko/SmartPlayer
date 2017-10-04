@@ -12656,11 +12656,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\Sarne\\OneDrive\\Dokumenty\\Visual Studio 2017\\Projects\\SmartPlayer\\SmartPlayerAPI\\SmartPlayerAPI\\SmartPlayerAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Sarne\\Dropbox\\Inzynierka\\SmartPlayer\\SmartPlayerAPI\\SmartPlayerAPI\\SmartPlayerAPI.csproj",
       "projectName": "SmartPlayerAPI",
-      "projectPath": "C:\\Users\\Sarne\\OneDrive\\Dokumenty\\Visual Studio 2017\\Projects\\SmartPlayer\\SmartPlayerAPI\\SmartPlayerAPI\\SmartPlayerAPI.csproj",
+      "projectPath": "C:\\Users\\Sarne\\Dropbox\\Inzynierka\\SmartPlayer\\SmartPlayerAPI\\SmartPlayerAPI\\SmartPlayerAPI.csproj",
       "packagesPath": "C:\\Users\\Sarne\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Sarne\\OneDrive\\Dokumenty\\Visual Studio 2017\\Projects\\SmartPlayer\\SmartPlayerAPI\\SmartPlayerAPI\\obj\\",
+      "outputPath": "C:\\Users\\Sarne\\Dropbox\\Inzynierka\\SmartPlayer\\SmartPlayerAPI\\SmartPlayerAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
