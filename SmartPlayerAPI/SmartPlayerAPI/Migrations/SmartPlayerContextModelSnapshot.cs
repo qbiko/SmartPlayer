@@ -20,18 +20,167 @@ namespace SmartPlayerAPI.Migrations
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.User", b =>
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.AccelerometerAndGyroscope", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset>("CreatedAt");
+                    b.Property<int>("PlayerInGameId");
 
-                    b.Property<string>("Nick");
+                    b.Property<DateTimeOffset>("TimeOfOccur");
+
+                    b.Property<int>("X");
+
+                    b.Property<int>("Y");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerInGameId");
+
+                    b.ToTable("AccelerometerAndGyroscope");
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Club", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTimeOffset>("DateOfCreate");
+
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Game", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ClubId");
+
+                    b.Property<string>("NameOfGame");
+
+                    b.Property<DateTimeOffset>("TimeOfStart");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClubId");
+
+                    b.ToTable("Game");
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Player", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ClubId");
+
+                    b.Property<DateTimeOffset>("DateOfBirth");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<int>("HeighOfUser");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<int>("WeightOfUser");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClubId");
+
+                    b.ToTable("Player");
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.PlayerInGame", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Active");
+
+                    b.Property<int>("GameId");
+
+                    b.Property<int>("Number");
+
+                    b.Property<int>("PlayerId");
+
+                    b.Property<string>("Position");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("PlayerInGame");
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.PulseSensor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("PlayerInGameId");
+
+                    b.Property<DateTimeOffset>("TimeOfOccur");
+
+                    b.Property<int>("Value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerInGameId");
+
+                    b.ToTable("PulseSensor");
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.AccelerometerAndGyroscope", b =>
+                {
+                    b.HasOne("SmartPlayerAPI.Persistance.Models.PlayerInGame", "PlayerInGame")
+                        .WithMany("AccelerometerAndGyroscopes")
+                        .HasForeignKey("PlayerInGameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Game", b =>
+                {
+                    b.HasOne("SmartPlayerAPI.Persistance.Models.Club", "Club")
+                        .WithMany("Games")
+                        .HasForeignKey("ClubId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Player", b =>
+                {
+                    b.HasOne("SmartPlayerAPI.Persistance.Models.Club", "Club")
+                        .WithMany("Players")
+                        .HasForeignKey("ClubId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.PlayerInGame", b =>
+                {
+                    b.HasOne("SmartPlayerAPI.Persistance.Models.Game", "Game")
+                        .WithMany("PlayerInGame")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SmartPlayerAPI.Persistance.Models.Player", "Player")
+                        .WithMany("PlayerInGame")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.PulseSensor", b =>
+                {
+                    b.HasOne("SmartPlayerAPI.Persistance.Models.PlayerInGame", "PlayerInGame")
+                        .WithMany("PulseSensors")
+                        .HasForeignKey("PlayerInGameId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -38,15 +38,15 @@ namespace SmartPlayerAPI.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(200, Type = typeof(Club))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> Register([FromBody]User newUser)
+        public async Task<IActionResult> Register([FromBody]Club newUser)
         {
-            var user = _smartPlayerContext.Add(new User() { CreatedAt = DateTimeOffset.UtcNow, Nick = newUser.Nick });
+           // var user = _smartPlayerContext.Add(new Club() { CreatedAt = DateTimeOffset.UtcNow, Nick = newUser.Nick });
             await _smartPlayerContext.SaveChangesAsync();
 
-            return Ok(user.Entity);
+            return Ok();
         }
 
         [HttpPost("coordiantes")]
