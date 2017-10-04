@@ -1,0 +1,11 @@
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\bin\Debug\netcoreapp2.0\InzynierkaAPI.deps.json
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\bin\Debug\netcoreapp2.0\InzynierkaAPI.runtimeconfig.json
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\bin\Debug\netcoreapp2.0\InzynierkaAPI.runtimeconfig.dev.json
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\bin\Debug\netcoreapp2.0\InzynierkaAPI.dll
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\obj\Debug\netcoreapp2.0\InzynierkaAPI.csprojResolveAssemblyReference.cache
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\obj\Debug\netcoreapp2.0\InzynierkaAPI.csproj.CoreCompileInputs.cache
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\obj\Debug\netcoreapp2.0\InzynierkaAPI.AssemblyInfoInputs.cache
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\obj\Debug\netcoreapp2.0\InzynierkaAPI.AssemblyInfo.cs
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\bin\Debug\netcoreapp2.0\InzynierkaAPI.pdb
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\obj\Debug\netcoreapp2.0\InzynierkaAPI.dll
+C:\Users\Sarne\OneDrive\Inzynierka\InzynierkaAPI\InzynierkaAPI\obj\Debug\netcoreapp2.0\InzynierkaAPI.pdb
