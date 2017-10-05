@@ -13,9 +13,9 @@ namespace SmartPlayerAPI.Persistance.Models
         public bool Active { get; set; }
         public int GameId { get; set; }
         public int PlayerId { get; set; }
-        public Game Game { get; set; }
-        public Player Player { get; set; }
-        public ICollection<PulseSensor> PulseSensors { get; set; }
-        public ICollection<AccelerometerAndGyroscope> AccelerometerAndGyroscopes { get; set; }
+        public virtual Game Game { get; set; }
+        public virtual Player Player { get; set; }
+        public virtual ICollection<PulseSensorResult> PulseSensorResults { get; set; }
+        public virtual ICollection<AccelerometerAndGyroscopeResult> AccelerometerAndGyroscopeResults { get; set; }
     }
 }

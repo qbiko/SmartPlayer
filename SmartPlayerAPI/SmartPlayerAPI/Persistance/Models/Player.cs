@@ -13,8 +13,8 @@ namespace SmartPlayerAPI.Persistance.Models
         public DateTimeOffset DateOfBirth { get; set; }
         public int HeighOfUser { get; set; }
         public int WeightOfUser { get; set; }
-        public Club Club { get; set; }
+        public virtual Club Club { get; set; }
         public int ClubId { get; set; }
-        public ICollection<PlayerInGame> PlayerInGame { get; set; }
+        public virtual ICollection<PlayerInGame> PlayerInGames { get; set; }
     }
 }

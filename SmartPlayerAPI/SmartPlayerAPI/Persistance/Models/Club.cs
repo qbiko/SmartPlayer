@@ -10,7 +10,7 @@ namespace SmartPlayerAPI.Persistance.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTimeOffset DateOfCreate { get; set; }
-        public ICollection<Player> Players { get; set; }
-        public ICollection<Game> Games { get; set; }
+        public virtual ICollection<Player> Players { get; set; }
+        public virtual ICollection<Game> Games { get; set; }
     }
 }
