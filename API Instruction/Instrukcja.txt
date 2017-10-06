@@ -26,3 +26,4 @@ Password: az/-g9X,?h
 Moze was poprosic o zalogowanie sie do azura, wtedy piszecie do mnie :)
 
 Jak juz po lewej pojawi sie serwer, wbijamy w inzynierkadb, New Query, select * from dbo.Club i mamy wszystkie zapisane kluby
+Proste jak jebanie ;)
