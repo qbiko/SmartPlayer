@@ -1,0 +1,28 @@
+SmartPlayer Api
+1.Cale API wraz z modelami I/O mozna podejrzec na http://inzynierkaapi.azurewebsites.net/swagger/
+2.Testowanie zapytan:
+jezeli chcemy wykonac kilka prostych zapytan i sprawdzic ich efekt, mozna to zrobic z poziomu swaggera, ale ja polecam Postmana(chyba domyslnie w kazdym windowsie a jak nie to sciagnac)
+
+Przyklad Rejstracji:
+
+POST http://inzynierkaapi.azurewebsites.net/api/Main/register 
+{
+"name": "klób mojej horej curki"
+}
+
+jezeli w odpowiedzi przychodzi 200, to zajebiscie, mamy klub. W responsie powinno byc do niego Id
+
+{
+  "id": 11,
+  "name": "klób mojej horej curki",
+  "dateOfCreate": "2017-10-06T08:35:50.376Z" <-- w utc
+}
+Teraz mozna podejrzec w bazie jak to wyglada, czyli wchodzimy do sql management studio
+Server Name: smartplayerwebapidbserver.database.windows.net
+Authentication: SQL Server Authentication
+Login: Sebastian
+Password: az/-g9X,?h
+
+Moze was poprosic o zalogowanie sie do azura, wtedy piszecie do mnie :)
+
+Jak juz po lewej pojawi sie serwer, wbijamy w inzynierkadb, New Query, select * from dbo.Club i mamy wszystkie zapisane kluby
