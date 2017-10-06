@@ -58,6 +58,16 @@ namespace SmartPlayerAPI.Controllers
 
         }
 
+        [HttpPost("sensors")]
+        [ProducesResponseType(200, Type = typeof(SensorsDataViewModel))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> CreateDataFromSensors([FromBody] SensorsDataViewModel coordinates)
+        {
+
+            return Ok(coordinates);
+        }
+
         [HttpPost("coordiantes")]
         [ProducesResponseType(200, Type = typeof(BatchValues))]
         [ProducesResponseType(400)]
@@ -67,6 +77,8 @@ namespace SmartPlayerAPI.Controllers
 
             return Ok(coordinates);
         }
+
+
 
     }
 }
