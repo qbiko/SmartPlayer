@@ -11,9 +11,10 @@ using System;
 namespace SmartPlayerAPI.Migrations
 {
     [DbContext(typeof(SmartPlayerContext))]
-    partial class SmartPlayerContextModelSnapshot : ModelSnapshot
+    [Migration("20171005192711_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

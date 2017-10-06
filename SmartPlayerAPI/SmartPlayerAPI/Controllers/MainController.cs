@@ -2,6 +2,7 @@
 using SmartPlayerAPI.Models;
 using SmartPlayerAPI.Persistance;
 using SmartPlayerAPI.Persistance.Models;
+using SmartPlayerAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,15 +39,23 @@ namespace SmartPlayerAPI.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(200, Type = typeof(Club))]
+        [ProducesResponseType(200, Type = typeof(ClubViewModel))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> Register([FromBody]Club newUser)
+        public async Task<IActionResult> Register([FromBody]ClubViewModel newClub)
         {
-           // var user = _smartPlayerContext.Add(new Club() { CreatedAt = DateTimeOffset.UtcNow, Nick = newUser.Nick });
-            await _smartPlayerContext.SaveChangesAsync();
+            try
+            {
+                var club = _smartPlayerContext.Add(new Club() { Name = newClub.Name, DateOfCreate = DateTimeOffset.UtcNow });
+                await _smartPlayerContext.SaveChangesAsync();
 
-            return Ok();
+                return Ok(club.Entity);
+            }
+            catch(Exception e)
+            {
+                return Ok(e);
+            }
+
         }
 
         [HttpPost("coordiantes")]
