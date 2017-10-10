@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace SmartPlayerAPI.ViewModels
 {
-    public class ClubViewModel
+    public class CoordianatesForAction
     {
-        public string ClubName { get; set; }
-        public string Password { get; set; }
+        public int PlayerId { get; set; }
+        public string PlayerName { get; set; }
+
     }
 }

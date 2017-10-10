@@ -6,6 +6,7 @@ using SmartPlayerAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartPlayerAPI.Controllers
@@ -46,7 +47,11 @@ namespace SmartPlayerAPI.Controllers
         {
             try
             {
-                var club = _smartPlayerContext.Add(new Club() { Name = newClub.Name, DateOfCreate = DateTimeOffset.UtcNow });
+                var club = _smartPlayerContext.Add(new Club() {
+                    Name = newClub.ClubName,
+                    DateOfCreate = DateTimeOffset.UtcNow,
+                    PasswordHash = Convert.ToBase64String(Encoding.ASCII.GetBytes(newClub.Password))
+                });
                 await _smartPlayerContext.SaveChangesAsync();
 
                 return Ok(club.Entity);
@@ -54,6 +59,32 @@ namespace SmartPlayerAPI.Controllers
             catch(Exception e)
             {
                 return Ok(e);
+            }
+
+        }
+
+        [HttpGet("login")]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        [ProducesResponseType(400, Type = typeof(Error))]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> Login(string clubName, string password)
+        {
+            try
+            {
+                var findClub = _smartPlayerContext.Club.FirstOrDefault(i => i.Name == clubName);
+                if(findClub==null)
+                {
+                    return BadRequest(new Error() { Success = false, Message = "Club doesn't exist"});
+                }
+                if (findClub.PasswordHash.Equals(Convert.ToBase64String(Encoding.ASCII.GetBytes(password))))
+                {
+                    return Ok(true);
+                }
+                return BadRequest(new Error() { Success = false, Message = "Bad password" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
             }
 
         }
@@ -67,17 +98,6 @@ namespace SmartPlayerAPI.Controllers
 
             return Ok(coordinates);
         }
-
-        [HttpPost("coordiantes")]
-        [ProducesResponseType(200, Type = typeof(BatchValues))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        public async Task<IActionResult> PostString([FromBody] BatchValues coordinates)
-        {
-
-            return Ok(coordinates);
-        }
-
 
 
     }

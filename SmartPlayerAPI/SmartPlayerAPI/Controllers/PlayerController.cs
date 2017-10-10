@@ -75,5 +75,56 @@ namespace SmartPlayerAPI.Controllers
 
         }
 
+        [HttpGet("clubplayers")]
+        [ProducesResponseType(200, Type = typeof(List<PlayerInGameViewModelOut>))]
+        [ProducesResponseType(400, Type = typeof(Error))]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> GetPlayersForClub(string clubName)
+        {
+            var players = _smartPlayerContext.Players.Where(i => i.Club.Name.Equals(clubName));
+            if (players == null)
+            {
+                return BadRequest(new Error() { Success = false, Message = "0 players" });
+            }
+            return Ok(players);
+        }
+
+        [HttpGet("gameplayers")]
+        [ProducesResponseType(200, Type = typeof(List<PlayerInGameViewModelOut>))]
+        [ProducesResponseType(400, Type = typeof(Error))]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> GetPlayersForGame(string playerInGameId)
+        {
+            int id = 0;
+            try
+            {
+                if(int.TryParse(playerInGameId, out id))
+                {
+                    var players = _smartPlayerContext.PlayerInGames.Where(i => i.Id == id).Select(i=>i.Player);
+                    if (players == null)
+                    {
+                        return BadRequest(new Error() { Success = false, Message = "No players" });
+                    }
+                    return Ok(players);
+                }
+
+            }
+            catch(Exception e)
+            {
+                return BadRequest();
+            }
+
+            return BadRequest(new Error() { Success = false, Message = "Bad id format, or something else" });
+        }
+
+        //[HttpGet("CoordiantesForPlayers")]
+        //[ProducesResponseType(200, Type = typeof(List<Player>))]
+        //[ProducesResponseType(400, Type = typeof(Error))]
+        //[ProducesResponseType(401)]
+        //public async Task<IActionResult> CoordinatesForPlayersInGame(string playerInGameId)
+        //{
+        //    return Ok();
+        //}
+
     }
 }

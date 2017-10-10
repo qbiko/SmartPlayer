@@ -13,8 +13,12 @@ namespace SmartPlayerAPI.Persistance
         public SmartPlayerContext(DbContextOptions<SmartPlayerContext> options) : base(options)
         {
         }
-
-        public DbSet<Club> User { get; set; }
+        public DbSet<Club> Club { get; set; }
+        public DbSet<Game> Games { get;set; }
+        public DbSet<Player> Players { get;set; }
+        public DbSet<PulseSensorResult> PulseSensorResults { get; set; }
+        public DbSet<AccelerometerAndGyroscopeResult> AccelerometerAndGyroscopeResults { get; set; }
+        public DbSet<PlayerInGame> PlayerInGames { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
