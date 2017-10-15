@@ -78,7 +78,7 @@ namespace SmartPlayerAPI.Controllers
                 }
                 if (findClub.PasswordHash.Equals(Convert.ToBase64String(Encoding.ASCII.GetBytes(password))))
                 {
-                    return Ok(true);
+                    return Ok(new { Success = true, id = findClub.Id});
                 }
                 return BadRequest(new Error() { Success = false, Message = "Bad password" });
             }

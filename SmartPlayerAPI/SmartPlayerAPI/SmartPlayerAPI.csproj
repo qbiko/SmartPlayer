@@ -8,6 +8,9 @@
     <None Remove="Properties\PublishProfiles\SmartPlayer-Api - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\SmartPlayerAPI - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\SmartPlayerAPI20171002093019 - Web Deploy.pubxml" />
+    <None Remove="Properties\PublishProfiles\SmartPlayerWebAPI - Web Deploy.pubxml" />
+    <None Remove="Properties\PublishProfiles\SmartplayerWebApiEurope - Web Deploy.pubxml" />
+    <None Remove="Properties\PublishProfiles\WebApiSmartPlayer - Web Deploy.pubxml" />
   </ItemGroup>
 
   <ItemGroup>

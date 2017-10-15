@@ -41,7 +41,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Azure"
       },
-      "applicationUrl": "http://inzynierkaapi.azurewebsites.net/"
+      "applicationUrl": "http://webapismartplayer.azurewebsites.net/"
     }
   }
 }
