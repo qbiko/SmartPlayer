@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"><html>
+  <title>Match View</title>
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/match_view.js"></script>
+</head>
+
+<body>
+  <div id="mainContainer">
+    <div class="grid-x">
+      <div class="medium-6 large-6 cell">
+        <h1 id="clubName"></h1>
+        <hr class="leftHr">
+        <div id="playersOnField">
+          <span class="badge">1</span>
+          <span class="badge">2</span>
+          <span class="badge">3</span>
+        </div>
+        <div id="field"></div>
+      </div>
+      <div class="medium-6 large-2 cell">
+        <div class="button-group buttonsMenu">
+          <a class="button expanded disabled">Wystartuj mecz</a>
+          <a class="button expanded secondary disabled">Zakończ mecz</a>
+        </div>
+        <div class="button-group buttonsMenu">
+          <a class="button expanded success">Dodaj zawodnika</a>
+          <a class="button expanded secondary disabled">Edytuj zawodnika</a>
+          <a class="button expanded alert disabled">Usuń zawodnika</a>
+        </div>
+      </div>
+      <div id="rightPanel" class="medium-6 large-4 cell">
+        <div id="playersList">
+          <form id="playersForm">
+            <label>Lista zawodników
+              <select id="players" size="18">
+                <option value="chodorowski">1. Jakub Chodorowski</option>
+              </select>
+            </label>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

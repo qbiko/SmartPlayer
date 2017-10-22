@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"><html>
+  <title>Rejestracja</title>
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/register.js"></script>
+</head>
+
+<body>
+  <form id="registerForm" onsubmit="return false">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div id="statusMessage" class="medium-6 cell callout success is-hidden">
+          <p class="text-center">Nowa drużyna została dodana.</p>
+        </div>
+        <div class="medium-6 cell">
+          <label>Nazwa klubu:
+            <input type="text" id="clubName" name="clubName" placeholder="Nazwa klubu">
+          </label>
+          <span id="clubNameMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Hasło:
+            <input type="password" id="password" name="password">
+          </label>
+          <span id="passwordMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Powtórz hasło:
+            <input type="password" id="repeatedPassword" name="repeatedPassword">
+          </label>
+        </div>
+        <div class="medium-6 cell">
+          <label for="fileUpload" class="hollow button secondary">Wczytaj herb</label>
+          <input type="file" id="fileUpload" class="show-for-sr">
+        </div>
+        <div class="medium-6 cell">
+          <div class="expanded button-group">
+            <button onclick="register()" class="button primary">Zarejestruj</button>
+            <a class="button secondary" href="login.html">Wróć do logowania</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div id="createAnimation" class="grid-x is-hidden">
+    <div class="cell"><div class="preloader"></div></div>
+  </div>
+</body>
+</html>
