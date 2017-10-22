@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"><html>
+  <title>Login</title>
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/login.js"></script>
+</head>
+
+<body>
+
+  <form id="loginForm" onsubmit="return false">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div id="statusMessage" class="medium-6 cell callout alert is-hidden">
+          <p class="text-center"></p>
+        </div>
+        <div class="medium-6 cell">
+          <label>Nazwa klubu:
+            <input type="text" id="clubName" name="Nazwa klubu" placeholder="Nazwa klubu">
+          </label>
+          <span id="clubNameMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Hasło:
+            <input type="password" id="password" name="Hasło">
+          </label>
+          <span id="passwordMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <div class="expanded button-group">
+            <button onclick="login()" type="submit" class="button primary">Zaloguj</button>
+            <a class="button secondary" href="register.html">Rejestracja</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div id="createAnimation" class="grid-x is-hidden">
+    <div class="cell"><div class="preloader"></div></div>
+  </div>
+</body>
+</html>
