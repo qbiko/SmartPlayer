@@ -1,0 +1,3 @@
+Do uruchomienia aplikacji potrzebny jest node.js i electron.
+Najpierw pobieramy node.js z https://nodejs.org/en/ i instalujemy go. Sprawdzamy w wierszu poleceñ komend¹: npm -v czy instalacja przebieg³a prawid³owo. Jeœli tak to instalujemy electron wpisuj¹c komendê: npm install electron-prebuilt --save-dev
+Teraz by uruchomiæ aplikacjê wystarczy w folderze client_application_electron wpisaæ komendê: npm start ;)
