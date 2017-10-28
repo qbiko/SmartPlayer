@@ -19,6 +19,18 @@ namespace SmartPlayerAPI.Controllers
         {
             _smartPlayerContext = smartPlayerContext;
         }
+
+        [HttpPost("dbtest")]
+        [ProducesResponseType(200, Type = typeof(Mock))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> Post([FromBody]MockViewModel mock)
+        {
+            var result = _smartPlayerContext.Add(new Mock() { Text = mock.Text, Number = mock.Number, CreatedAt = DateTimeOffset.Now });
+            await _smartPlayerContext.SaveChangesAsync();
+            return Ok(result.Entity);
+        }
+
         [HttpPost("decimal")]
         [ProducesResponseType(200, Type = typeof(decimal))]
         [ProducesResponseType(400)]

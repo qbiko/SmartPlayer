@@ -19,6 +19,7 @@ namespace SmartPlayerAPI.Persistance
         public DbSet<PulseSensorResult> PulseSensorResults { get; set; }
         public DbSet<AccelerometerAndGyroscopeResult> AccelerometerAndGyroscopeResults { get; set; }
         public DbSet<PlayerInGame> PlayerInGames { get; set; }
+        public DbSet<Mock> Mock { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +47,9 @@ namespace SmartPlayerAPI.Persistance
             modelBuilder.Entity<PlayerInGame>().HasKey(o => o.Id);
             modelBuilder.Entity<PlayerInGame>().HasOne(o => o.Game).WithMany(o => o.PlayerInGames).IsRequired(false);
             modelBuilder.Entity<PlayerInGame>().HasOne(o => o.Player).WithMany(o => o.PlayerInGames).IsRequired(false);
+
+            modelBuilder.Entity<Mock>().ToTable("Mock");
+            modelBuilder.Entity<Mock>().HasKey(o => o.Id);
         }
     }
 }
