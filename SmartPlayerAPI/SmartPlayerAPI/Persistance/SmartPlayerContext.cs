@@ -37,16 +37,17 @@ namespace SmartPlayerAPI.Persistance
 
             modelBuilder.Entity<PulseSensorResult>().ToTable("PulseSensorResult");
             modelBuilder.Entity<PulseSensorResult>().HasKey(o => o.Id);
-            modelBuilder.Entity<PulseSensorResult>().HasOne(o => o.PlayerInGame).WithMany(o => o.PulseSensorResults);
+            modelBuilder.Entity<PulseSensorResult>().HasOne(o => o.PlayerInGame).WithMany(o => o.PulseSensorResults).HasForeignKey(i => i.PlayerInGameId);
 
             modelBuilder.Entity<AccelerometerAndGyroscopeResult>().ToTable("AccelerometerAndGyroscopeResult");
             modelBuilder.Entity<AccelerometerAndGyroscopeResult>().HasKey(o => o.Id);
-            modelBuilder.Entity<AccelerometerAndGyroscopeResult>().HasOne(o => o.PlayerInGame).WithMany(o => o.AccelerometerAndGyroscopeResults);
+            modelBuilder.Entity<AccelerometerAndGyroscopeResult>().HasOne(o => o.PlayerInGame).WithMany(o => o.AccelerometerAndGyroscopeResults).HasForeignKey(i=>i.PlayerInGameId);
 
             modelBuilder.Entity<PlayerInGame>().ToTable("PlayerInGame");
             modelBuilder.Entity<PlayerInGame>().HasKey(o => o.Id);
             modelBuilder.Entity<PlayerInGame>().HasOne(o => o.Game).WithMany(o => o.PlayerInGames).IsRequired(false);
             modelBuilder.Entity<PlayerInGame>().HasOne(o => o.Player).WithMany(o => o.PlayerInGames).IsRequired(false);
+            modelBuilder.Entity<PlayerInGame>().HasMany(o => o.PulseSensorResults).WithOne(o => o.PlayerInGame);
 
             modelBuilder.Entity<Mock>().ToTable("Mock");
             modelBuilder.Entity<Mock>().HasKey(o => o.Id);

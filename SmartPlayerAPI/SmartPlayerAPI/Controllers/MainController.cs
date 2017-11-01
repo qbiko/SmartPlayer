@@ -61,7 +61,7 @@ namespace SmartPlayerAPI.Controllers
             {
                 var club = _smartPlayerContext.Add(new Club() {
                     Name = newClub.ClubName,
-                    DateOfCreate = DateTimeOffset.UtcNow,
+                    DateOfCreate = DateTimeOffset.Now,
                     PasswordHash = Convert.ToBase64String(Encoding.ASCII.GetBytes(newClub.Password))
                 });
                 await _smartPlayerContext.SaveChangesAsync();
