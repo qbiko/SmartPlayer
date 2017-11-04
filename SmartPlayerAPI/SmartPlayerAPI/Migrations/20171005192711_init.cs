@@ -53,7 +53,7 @@ namespace SmartPlayerAPI.Migrations
                     ClubId = table.Column<int>(type: "int", nullable: false),
                     DateOfBirth = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HeighOfUser = table.Column<int>(type: "int", nullable: false),
+                    HeightOfUser = table.Column<int>(type: "int", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WeightOfUser = table.Column<int>(type: "int", nullable: false)
                 },

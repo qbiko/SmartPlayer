@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartPlayerAPI.Controllers
 {
@@ -32,7 +33,7 @@ namespace SmartPlayerAPI.Controllers
                     FirstName = newPlayer.FirstName,
                     LastName = newPlayer.LastName,
                     DateOfBirth = newPlayer.DateOfBirth,
-                    HeighOfUser = newPlayer.HeighOfUser,
+                    HeightOfUser = newPlayer.HeightOfUser,
                     WeightOfUser = newPlayer.WeightOfUser,
                     ClubId = newPlayer.ClubId
                 });
@@ -76,17 +77,36 @@ namespace SmartPlayerAPI.Controllers
         }
 
         [HttpGet("clubplayers")]
-        [ProducesResponseType(200, Type = typeof(List<PlayerInGameViewModelOut>))]
+        [ProducesResponseType(200, Type = typeof(List<PlayerInClubViewModelOut>))]
         [ProducesResponseType(400, Type = typeof(Error))]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetPlayersForClub(string clubName)
+        public async Task<IActionResult> GetPlayersForClub(int clubId)
         {
-            var players = _smartPlayerContext.Players.Where(i => i.Club.Name.Equals(clubName));
+            //var players = _smartPlayerContext.Players.Where(i => i.Club.Name.Equals(clubName));
+            //if (players == null)
+            //{
+            //    return BadRequest(new Error() { Success = false, Message = "0 players" });
+            //}
+            //return Ok(players);
+            var club = await _smartPlayerContext.Set<Club>().AsQueryable().Include(i => i.Players).FirstOrDefaultAsync(i=>i.Id == clubId);
+            var players = club.Players;
             if (players == null)
             {
                 return BadRequest(new Error() { Success = false, Message = "0 players" });
             }
-            return Ok(players);
+            List<PlayerInClubViewModelOut> playersOut = new List<PlayerInClubViewModelOut>();
+            foreach (var p in players)
+            {
+                playersOut.Add(new PlayerInClubViewModelOut() {
+                    Id = p.Id,
+                    DateOfBirth = p.DateOfBirth,
+                    FirstName = p.FirstName,
+                    HeightOfUser = p.HeightOfUser,
+                    LastName = p.LastName,
+                    WeightOfUser = p.WeightOfUser
+                });
+            }
+            return Ok(playersOut);
         }
 
         [HttpGet("gameplayers")]

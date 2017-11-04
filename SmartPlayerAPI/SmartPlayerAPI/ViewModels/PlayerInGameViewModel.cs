@@ -14,7 +14,7 @@ namespace SmartPlayerAPI.ViewModels
         public string Position { get; set; }
         public int Number { get; set; }
         public bool Active { get; set; }
-        public int? GameId { get; set; }
-        public int? PlayerId { get; set; }
+        public int GameId { get; set; }
+        public int PlayerId { get; set; }
     }
 }

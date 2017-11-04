@@ -86,7 +86,7 @@ namespace SmartPlayerAPI.Migrations
 
                     b.Property<string>("FirstName");
 
-                    b.Property<int>("HeighOfUser");
+                    b.Property<int>("HeightOfUser");
 
                     b.Property<string>("LastName");
 
