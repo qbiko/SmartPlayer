@@ -82,12 +82,6 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(401)]
         public async Task<IActionResult> GetPlayersForClub(int clubId)
         {
-            //var players = _smartPlayerContext.Players.Where(i => i.Club.Name.Equals(clubName));
-            //if (players == null)
-            //{
-            //    return BadRequest(new Error() { Success = false, Message = "0 players" });
-            //}
-            //return Ok(players);
             var club = await _smartPlayerContext.Set<Club>().AsQueryable().Include(i => i.Players).FirstOrDefaultAsync(i=>i.Id == clubId);
             var players = club.Players;
             if (players == null)
