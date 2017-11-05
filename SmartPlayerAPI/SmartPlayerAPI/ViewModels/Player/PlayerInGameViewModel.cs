@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 
 namespace SmartPlayerAPI.ViewModels
 {
+    public class PlayerInGameViewModelOutExtend : PlayerInGameViewModelOut
+    {
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+    }
     public class PlayerInGameViewModelOut : PlayerInGameViewModelIn
     {
         public int Id { get; set; }
@@ -16,5 +21,6 @@ namespace SmartPlayerAPI.ViewModels
         public bool Active { get; set; }
         public int GameId { get; set; }
         public int PlayerId { get; set; }
+
     }
 }

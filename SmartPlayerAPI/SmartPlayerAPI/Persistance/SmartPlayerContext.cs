@@ -34,6 +34,7 @@ namespace SmartPlayerAPI.Persistance
             modelBuilder.Entity<Player>().ToTable("Player");
             modelBuilder.Entity<Player>().HasKey(o => o.Id);
             modelBuilder.Entity<Player>().HasOne(o => o.Club).WithMany(o => o.Players);
+            modelBuilder.Entity<Player>().HasMany(o => o.PlayerInGames).WithOne(o => o.Player);
 
             modelBuilder.Entity<PulseSensorResult>().ToTable("PulseSensorResult");
             modelBuilder.Entity<PulseSensorResult>().HasKey(o => o.Id);

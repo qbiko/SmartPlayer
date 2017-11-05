@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartPlayerAPI.Models;
 using SmartPlayerAPI.Persistance;
 using SmartPlayerAPI.Persistance.Models;
 using SmartPlayerAPI.ViewModels;

@@ -33,7 +33,7 @@ namespace SmartPlayerAPI.Controllers
                     FirstName = newPlayer.FirstName,
                     LastName = newPlayer.LastName,
                     DateOfBirth = newPlayer.DateOfBirth,
-                    HeightOfUser = newPlayer.HeightOfUser,
+                    HeighOfUser = newPlayer.HeightOfUser,
                     WeightOfUser = newPlayer.WeightOfUser,
                     ClubId = newPlayer.ClubId
                 });
@@ -76,6 +76,40 @@ namespace SmartPlayerAPI.Controllers
 
         }
 
+        [HttpDelete("removeFromGame")]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> RemoveFromGame(string playerId, string gameId)
+        {
+            //dodać obsługe czy gameId i PlayerId istnieje!
+            try
+            {
+                int playerIdInt = 0;
+                int gameIdInt = 0;
+
+                if(int.TryParse(playerId, out playerIdInt) && int.TryParse(gameId, out gameIdInt))
+                {
+                    var playerInGame = await _smartPlayerContext.Set<PlayerInGame>().FirstOrDefaultAsync(i => i.PlayerId == playerIdInt && i.GameId == gameIdInt);
+                    if(playerInGame!=null)
+                    {
+                        var result = _smartPlayerContext.Set<PlayerInGame>().Remove(playerInGame);
+                        await _smartPlayerContext.SaveChangesAsync();
+                    }
+
+
+                    return Ok(true);
+                }
+                return BadRequest("Bad Player or Game id");
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Check if gameId or PlayerId exists in database");
+            }
+
+        }
+
         [HttpGet("clubplayers")]
         [ProducesResponseType(200, Type = typeof(List<PlayerInClubViewModelOut>))]
         [ProducesResponseType(400, Type = typeof(Error))]
@@ -95,7 +129,7 @@ namespace SmartPlayerAPI.Controllers
                     Id = p.Id,
                     DateOfBirth = p.DateOfBirth,
                     FirstName = p.FirstName,
-                    HeightOfUser = p.HeightOfUser,
+                    HeightOfUser = p.HeighOfUser,
                     LastName = p.LastName,
                     WeightOfUser = p.WeightOfUser
                 });
@@ -103,18 +137,68 @@ namespace SmartPlayerAPI.Controllers
             return Ok(playersOut);
         }
 
-        [HttpGet("gameplayers")]
-        [ProducesResponseType(200, Type = typeof(List<PlayerInGameViewModelOut>))]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(PlayerViewModelOut))]
         [ProducesResponseType(400, Type = typeof(Error))]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetPlayersForGame(string playerInGameId)
+        public async Task<IActionResult> GetPlayer(string playerId)
+        {
+            int id = 0;
+            if (int.TryParse(playerId, out id))
+            {
+                var player = await _smartPlayerContext.Set<Player>().FirstOrDefaultAsync(i => i.Id == id);
+                if(player!=null)
+                {
+                    return Ok(new PlayerViewModelOut()
+                    {
+                        Id = player.Id,
+                        ClubId = player.ClubId,
+                        DateOfBirth = player.DateOfBirth,
+                        FirstName  = player.FirstName,
+                        LastName = player.LastName,
+                        HeightOfUser = player.HeighOfUser,
+                        WeightOfUser = player.WeightOfUser
+                    });
+                }
+                return BadRequest("Player doeasn't exists");
+            }
+            return BadRequest("Id of players is not properly");
+
+        }
+
+        [HttpGet("gameplayers")]
+        [ProducesResponseType(200, Type = typeof(List<PlayerInGameViewModelOutExtend>))]
+        [ProducesResponseType(400, Type = typeof(Error))]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> GetPlayersForGame(string gameId)
         {
             int id = 0;
             try
             {
-                if(int.TryParse(playerInGameId, out id))
+                if (int.TryParse(gameId, out id))
                 {
-                    var players = _smartPlayerContext.PlayerInGames.Where(i => i.Id == id).Select(i=>i.Player);
+                    var game = await _smartPlayerContext.Set<Game>().AsQueryable().Include(i => i.PlayerInGames).FirstOrDefaultAsync(i => i.Id == id);
+                    var playerInGmaes = game.PlayerInGames;
+                    
+                    var players = new List<PlayerInGameViewModelOutExtend>();
+                    foreach(var p in playerInGmaes)
+                    {
+                        var player = await _smartPlayerContext.Set<Player>().FirstOrDefaultAsync(i => i.Id == p.PlayerId);
+                        if (player != null)
+                        {
+                            players.Add(new PlayerInGameViewModelOutExtend()
+                            {
+                                Position = p.Position,
+                                Number = p.Number,
+                                Active = p.Active,
+                                GameId = p.GameId.GetValueOrDefault(),
+                                PlayerId = p.PlayerId.GetValueOrDefault(),
+                                Firstname = player.FirstName,
+                                Lastname = player.LastName
+                            });
+                        }
+
+                    }
                     if (players == null)
                     {
                         return BadRequest(new Error() { Success = false, Message = "No players" });
@@ -123,7 +207,7 @@ namespace SmartPlayerAPI.Controllers
                 }
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest();
             }
