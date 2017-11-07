@@ -11,9 +11,10 @@ using System;
 namespace SmartPlayerAPI.Migrations
 {
     [DbContext(typeof(SmartPlayerContext))]
-    partial class SmartPlayerContextModelSnapshot : ModelSnapshot
+    [Migration("20171106213753_latlng")]
+    partial class latlng
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,26 +79,6 @@ namespace SmartPlayerAPI.Migrations
                     b.ToTable("Game");
                 });
 
-            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.GPSLocation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<double?>("Lat");
-
-                    b.Property<double?>("Lng");
-
-                    b.Property<int>("PlayerInGameId");
-
-                    b.Property<DateTimeOffset>("TimeOfOccur");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlayerInGameId");
-
-                    b.ToTable("GPSLocation");
-                });
-
             modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Mock", b =>
                 {
                     b.Property<int>("Id")
@@ -113,7 +94,6 @@ namespace SmartPlayerAPI.Migrations
 
                     b.ToTable("Mock");
                 });
-
 
             modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Player", b =>
                 {
@@ -197,14 +177,6 @@ namespace SmartPlayerAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.GPSLocation", b =>
-                {
-                    b.HasOne("SmartPlayerAPI.Persistance.Models.PlayerInGame", "PlayerInGame")
-                        .WithMany("GPSLocations")
-                        .HasForeignKey("PlayerInGameId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Player", b =>
                 {
                     b.HasOne("SmartPlayerAPI.Persistance.Models.Club", "Club")
@@ -218,7 +190,6 @@ namespace SmartPlayerAPI.Migrations
                     b.HasOne("SmartPlayerAPI.Persistance.Models.Game", "Game")
                         .WithMany("PlayerInGames")
                         .HasForeignKey("GameId");
-
 
                     b.HasOne("SmartPlayerAPI.Persistance.Models.Player", "Player")
                         .WithMany("PlayerInGames")

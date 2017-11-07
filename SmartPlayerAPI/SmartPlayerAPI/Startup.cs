@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SmartPlayerAPI.Persistance;
 using Microsoft.EntityFrameworkCore;
+using SmartPlayerAPI.Repository.Persistence;
+using SmartPlayerAPI.Repository.Interfaces;
 
 namespace SmartPlayerAPI
 {
@@ -37,6 +39,10 @@ namespace SmartPlayerAPI
             {
                 o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddScoped<IAccelerometerAndGyroscopeRepository, AccelerometerAndGyroscopeRepository>();
+            services.AddScoped<IGPSLocationRepository, GPSLocationRepository>();
+            services.AddScoped<IPlayerInGameRepository, PlayerInGameRepository>();
 
             services.AddMvc();
         }

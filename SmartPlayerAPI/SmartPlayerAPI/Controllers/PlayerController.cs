@@ -215,14 +215,5 @@ namespace SmartPlayerAPI.Controllers
             return BadRequest(new Error() { Success = false, Message = "Bad id format, or something else" });
         }
 
-        //[HttpGet("CoordiantesForPlayers")]
-        //[ProducesResponseType(200, Type = typeof(List<Player>))]
-        //[ProducesResponseType(400, Type = typeof(Error))]
-        //[ProducesResponseType(401)]
-        //public async Task<IActionResult> CoordinatesForPlayersInGame(string playerInGameId)
-        //{
-        //    return Ok();
-        //}
-
     }
 }

@@ -3,7 +3,6 @@ C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\bin\
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\bin\Debug\netcoreapp2.0\SmartPlayerAPI.runtimeconfig.dev.json
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\bin\Debug\netcoreapp2.0\SmartPlayerAPI.dll
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\bin\Debug\netcoreapp2.0\SmartPlayerAPI.pdb
-C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\obj\Debug\netcoreapp2.0\SmartPlayerAPI.csprojResolveAssemblyReference.cache
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\obj\Debug\netcoreapp2.0\SmartPlayerAPI.csproj.CoreCompileInputs.cache
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\obj\Debug\netcoreapp2.0\SmartPlayerAPI.AssemblyInfoInputs.cache
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\obj\Debug\netcoreapp2.0\SmartPlayerAPI.AssemblyInfo.cs

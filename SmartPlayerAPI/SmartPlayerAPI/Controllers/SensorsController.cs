@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using SmartPlayerAPI.Persistance;
 using SmartPlayerAPI.Persistance.Models;
+using SmartPlayerAPI.Repository.Interfaces;
 using SmartPlayerAPI.ViewModels;
+using SmartPlayerAPI.ViewModels.Sensors.GPS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +16,19 @@ namespace SmartPlayerAPI.Controllers
     public class SensorsController : Controller
     {
         private readonly SmartPlayerContext _smartPlayerContext;
-        public SensorsController(SmartPlayerContext smartPlayerContext)
+        private readonly IAccelerometerAndGyroscopeRepository _accelerometerAndGyroscopeRepository;
+        private readonly IGPSLocationRepository GPSLocationRepository;
+        private readonly IPlayerInGameRepository _playerInGameRepository;
+
+        public SensorsController(SmartPlayerContext smartPlayerContext,
+            IAccelerometerAndGyroscopeRepository accelerometerAndGyroscopeRepository,
+            IGPSLocationRepository gpsLocationRepository,
+            IPlayerInGameRepository playerInGameRepository)
         {
             _smartPlayerContext = smartPlayerContext;
+            _accelerometerAndGyroscopeRepository = accelerometerAndGyroscopeRepository;
+            GPSLocationRepository = gpsLocationRepository;
+            _playerInGameRepository = playerInGameRepository;
         }
 
         [HttpPost("pulse")]
@@ -118,6 +130,38 @@ namespace SmartPlayerAPI.Controllers
             {
                 return BadRequest();
             }
+
+        }
+
+        [HttpPost("location")]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> SaveLocation([FromBody]GPSViewModel viewModel)
+        {
+
+            //var playerInGame = await _playerInGameRepository.FindByCriteria(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId);
+            //if (playerInGame == null)
+            //    return BadRequest("Bad playerId or gameId");
+
+            //var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.Now, PlayerInGameId = playerInGame.Id });
+            //if (location == null)
+            //    return BadRequest("Error during saving location coordinates in database");
+
+            return Ok(true);
+
+        }
+
+        [HttpGet("locationsForPlayer")]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> GetLocationsForPlayer([FromBody]GPSPlayerInGame viewModel)
+        {
+            var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId, i => i.GPSLocations);
+            var listOfCoordinates = playerInGame.GPSLocations;
+
+            return Ok();
 
         }
     }
