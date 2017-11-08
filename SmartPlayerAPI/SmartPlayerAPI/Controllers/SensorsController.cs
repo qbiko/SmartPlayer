@@ -140,13 +140,13 @@ namespace SmartPlayerAPI.Controllers
         public async Task<IActionResult> SaveLocation([FromBody]GPSViewModel viewModel)
         {
 
-            //var playerInGame = await _playerInGameRepository.FindByCriteria(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId);
-            //if (playerInGame == null)
-            //    return BadRequest("Bad playerId or gameId");
+            var playerInGame = await _playerInGameRepository.FindByCriteria(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId);
+            if (playerInGame == null)
+                return BadRequest("Bad playerId or gameId");
 
-            //var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.Now, PlayerInGameId = playerInGame.Id });
-            //if (location == null)
-            //    return BadRequest("Error during saving location coordinates in database");
+            var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.Now, PlayerInGameId = playerInGame.Id });
+            if (location == null)
+                return BadRequest("Error during saving location coordinates in database");
 
             return Ok(true);
 

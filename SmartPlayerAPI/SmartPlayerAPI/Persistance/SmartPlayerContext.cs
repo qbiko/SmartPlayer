@@ -21,7 +21,7 @@ namespace SmartPlayerAPI.Persistance
         public DbSet<PlayerInGame> PlayerInGames { get; set; }
         public DbSet<Mock> Mock { get; set; }
         public DbSet<GPSLocation> GPSLocation { get; set; }
-        //public DbSet<Module> Module { get; set; }
+        public DbSet<Module> Module { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,7 +52,7 @@ namespace SmartPlayerAPI.Persistance
             modelBuilder.Entity<PlayerInGame>().HasOne(o => o.Player).WithMany(o => o.PlayerInGames).IsRequired(false);
             modelBuilder.Entity<PlayerInGame>().HasMany(o => o.PulseSensorResults).WithOne(o => o.PlayerInGame);
             modelBuilder.Entity<PlayerInGame>().HasMany(o => o.GPSLocations).WithOne(o => o.PlayerInGame);
-            //modelBuilder.Entity<PlayerInGame>().HasOne(o => o.Module).WithMany(o => o.PlayerInGames).IsRequired(false);
+            modelBuilder.Entity<PlayerInGame>().HasOne(o => o.Module).WithMany(o => o.PlayerInGames).IsRequired(false);
 
             modelBuilder.Entity<Mock>().ToTable("Mock");
             modelBuilder.Entity<Mock>().HasKey(o => o.Id);
@@ -61,9 +61,9 @@ namespace SmartPlayerAPI.Persistance
             modelBuilder.Entity<GPSLocation>().HasKey(o => o.Id);
             modelBuilder.Entity<GPSLocation>().HasOne(o => o.PlayerInGame).WithMany(o => o.GPSLocations).HasForeignKey(o => o.PlayerInGameId);
 
-            //modelBuilder.Entity<Module>().ToTable("Module");
-            //modelBuilder.Entity<Module>().HasKey(o => o.Id);
-            //modelBuilder.Entity<Module>().HasMany(o => o.PlayerInGames).WithOne(i => i.Module);
+            modelBuilder.Entity<Module>().ToTable("Module");
+            modelBuilder.Entity<Module>().HasKey(o => o.Id);
+            modelBuilder.Entity<Module>().HasMany(o => o.PlayerInGames).WithOne(i => i.Module);
         }
     }
 }

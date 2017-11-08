@@ -14,8 +14,8 @@ namespace SmartPlayerAPI.Persistance.Models
         public bool Active { get; set; }
         public int? GameId { get; set; }
         public int? PlayerId { get; set; }
-        //public int? ModuleId { get; set; }
-        //public virtual Module Module {get;set;}
+        public int? ModuleId { get; set; }
+        public virtual Module Module {get;set;}
         public virtual Game Game { get; set; }
         public virtual Player Player { get; set; }
         public virtual ICollection<PulseSensorResult> PulseSensorResults { get; set; }
