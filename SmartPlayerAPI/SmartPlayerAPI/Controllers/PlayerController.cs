@@ -63,7 +63,8 @@ namespace SmartPlayerAPI.Controllers
                     Number = newGame.Number,
                     Active = newGame.Active,
                     GameId = newGame.GameId,
-                    PlayerId = newGame.PlayerId
+                    PlayerId = newGame.PlayerId,
+                    ModuleId = newGame.ModuleId
                 });
                 await _smartPlayerContext.SaveChangesAsync();
 
@@ -194,7 +195,9 @@ namespace SmartPlayerAPI.Controllers
                                 GameId = p.GameId.GetValueOrDefault(),
                                 PlayerId = p.PlayerId.GetValueOrDefault(),
                                 Firstname = player.FirstName,
-                                Lastname = player.LastName
+                                Lastname = player.LastName,
+                                Id = player.Id,
+                                ModuleId = p.ModuleId
                             });
                         }
 

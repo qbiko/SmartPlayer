@@ -12,6 +12,11 @@ using SmartPlayerAPI.Persistance;
 using Microsoft.EntityFrameworkCore;
 using SmartPlayerAPI.Repository.Persistence;
 using SmartPlayerAPI.Repository.Interfaces;
+using AutoMapper;
+using System.Reflection;
+using SmartPlayerAPI.ViewModels.Modules;
+using SmartPlayerAPI.Persistance.Models;
+using SmartPlayerAPI.ViewModels.Sensors.GPS;
 
 namespace SmartPlayerAPI
 {
@@ -34,6 +39,18 @@ namespace SmartPlayerAPI
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "SmartPlayer API 1.0", Version = "v1" });
             });
 
+            services.AddAutoMapper(ctx =>
+            {
+                ctx.CreateMap<Persistance.Models.Module, ModuleOut>()
+                .ForMember(i => i.MACAddress, o => o.MapFrom(i => i.MACAddress))
+                .ForMember(i => i.Id, o => o.MapFrom(i => i.Id));
+       
+                ctx.CreateMap<List<Persistance.Models.Module>, List<ModuleOut>>();
+                ctx.CreateMap<List<ModuleOut>, List<Persistance.Models.Module>>();
+                ctx.CreateMap<GPSLocation, PointInTime>();
+                ctx.CreateMap<List<Persistance.Models.GPSLocation>, List<PointInTime>>();
+
+            }, assemblies: Enumerable.Empty<Assembly>());
             //Configure db
             services.AddDbContextPool<SmartPlayerContext>(o =>
             {
@@ -43,6 +60,7 @@ namespace SmartPlayerAPI
             services.AddScoped<IAccelerometerAndGyroscopeRepository, AccelerometerAndGyroscopeRepository>();
             services.AddScoped<IGPSLocationRepository, GPSLocationRepository>();
             services.AddScoped<IPlayerInGameRepository, PlayerInGameRepository>();
+            services.AddScoped<IModuleRepository, ModuleRepository>();
 
             services.AddMvc();
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartPlayerAPI.Persistance;
 using SmartPlayerAPI.Persistance.Models;
@@ -19,16 +20,21 @@ namespace SmartPlayerAPI.Controllers
         private readonly IAccelerometerAndGyroscopeRepository _accelerometerAndGyroscopeRepository;
         private readonly IGPSLocationRepository GPSLocationRepository;
         private readonly IPlayerInGameRepository _playerInGameRepository;
-
+        private readonly IModuleRepository _moduleRepository;
+        private readonly IMapper _mapper;
         public SensorsController(SmartPlayerContext smartPlayerContext,
             IAccelerometerAndGyroscopeRepository accelerometerAndGyroscopeRepository,
             IGPSLocationRepository gpsLocationRepository,
-            IPlayerInGameRepository playerInGameRepository)
+            IPlayerInGameRepository playerInGameRepository,
+            IModuleRepository moduleRepository,
+            IMapper mapper)
         {
             _smartPlayerContext = smartPlayerContext;
             _accelerometerAndGyroscopeRepository = accelerometerAndGyroscopeRepository;
             GPSLocationRepository = gpsLocationRepository;
             _playerInGameRepository = playerInGameRepository;
+            _moduleRepository = moduleRepository;
+            _mapper = mapper;
         }
 
         [HttpPost("pulse")]
@@ -69,15 +75,18 @@ namespace SmartPlayerAPI.Controllers
         {
             try
             {
-                var playerInGame = await _smartPlayerContext.Set<PlayerInGame>().AsQueryable().SingleOrDefaultAsync(i => i.GameId == pulseSensorIn.GameId && i.PlayerId == pulseSensorIn.PlayerId).ConfigureAwait(false);
+                var module = await _moduleRepository.FindByCriteria(i => i.MACAddress.Equals(pulseSensorIn.ModuleMac));
+                if (module == null)
+                    return BadRequest("moduleId");
+
+                var playerInGame = await _smartPlayerContext.Set<PlayerInGame>().AsQueryable().SingleOrDefaultAsync(i => i.ModuleId == module.Id).ConfigureAwait(false);
                 if (playerInGame == null)
                 {
                     return BadRequest("Bad Game or PlayerId");
                 }
 
                 PulseSensorBatch<PulseSensorOutBatch> result = new PulseSensorBatch<PulseSensorOutBatch>();
-                result.GameId = pulseSensorIn.GameId;
-                result.PlayerId = pulseSensorIn.PlayerId;
+                result.ModuleMac = pulseSensorIn.ModuleMac;
                 foreach (var p in pulseSensorIn.PulseList)
                 {
                     var res =  await _smartPlayerContext.AddAsync(new PulseSensorResult()
@@ -102,15 +111,19 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(List<PulseSensorViewModel>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetPulseForUserInMatch(int playerId, int gameId)
+        public async Task<IActionResult> GetPulseForUserInMatch(string moduleMac)
         {
             try
             {
+                var module = await _moduleRepository.FindByCriteria(i => i.MACAddress.Equals(moduleMac));
+                if (module == null)
+                    return BadRequest("moduleId");
+                
                 var playerInGame = await _smartPlayerContext
                     .Set<PlayerInGame>()
                     .AsQueryable()
                     .Include(i => i.PulseSensorResults)
-                    .SingleOrDefaultAsync(i => i.GameId == gameId && i.PlayerId == playerId)
+                    .SingleOrDefaultAsync(m=>m.ModuleId == module.Id)
                     .ConfigureAwait(false);
 
                 if (playerInGame == null)
@@ -137,31 +150,36 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> SaveLocation([FromBody]GPSViewModel viewModel)
+        public async Task<IActionResult> SaveLocation([FromBody]PointWithMac viewModel)
         {
+            var module = await _moduleRepository.FindByCriteria(i => i.MACAddress == viewModel.ModuleMac);
+            if (module != null)
+            {
+                var playerInGame = await _playerInGameRepository.FindByCriteria(i => i.ModuleId == module.Id);
+                if (playerInGame == null)
+                    return BadRequest("Bad playerId or gameId");
 
-            var playerInGame = await _playerInGameRepository.FindByCriteria(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId);
-            if (playerInGame == null)
-                return BadRequest("Bad playerId or gameId");
+                var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.Now, PlayerInGameId = playerInGame.Id });
+                if (location == null)
+                    return BadRequest("Error during saving location coordinates in database");
 
-            var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.Now, PlayerInGameId = playerInGame.Id });
-            if (location == null)
-                return BadRequest("Error during saving location coordinates in database");
-
-            return Ok(true);
+                return Ok(true);
+            }
+            return BadRequest();
 
         }
 
         [HttpGet("locationsForPlayer")]
-        [ProducesResponseType(200, Type = typeof(bool))]
+        [ProducesResponseType(200, Type = typeof(List<PointInTime>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         public async Task<IActionResult> GetLocationsForPlayer([FromBody]GPSPlayerInGame viewModel)
         {
             var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId, i => i.GPSLocations);
-            var listOfCoordinates = playerInGame.GPSLocations;
+            var listOfCoordinates = playerInGame.GPSLocations.ToList();
+            var response = _mapper.Map<List<PointInTime>>(listOfCoordinates);
 
-            return Ok();
+            return Ok(response);
 
         }
     }

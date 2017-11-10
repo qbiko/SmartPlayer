@@ -21,6 +21,7 @@ namespace SmartPlayerAPI.ViewModels
         public bool Active { get; set; }
         public int GameId { get; set; }
         public int PlayerId { get; set; }
+        public int? ModuleId { get; set; }
 
     }
 }

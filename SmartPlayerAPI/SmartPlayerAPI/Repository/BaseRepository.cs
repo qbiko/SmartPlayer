@@ -52,11 +52,6 @@ namespace SmartPlayerAPI.Repository
             return result;
         }
 
-        public async Task<IList<TAggregate>> FindByCriteria(Expression<Func<TAggregate, bool>> criteria)
-        {
-            var result = await _dbSet.AsQueryable().Where(criteria).ToListAsync().ConfigureAwait(false);
-            return result;
-        }
 
         public async Task<TAggregate> FindWithInclude(Expression<Func<TAggregate, bool>> criteria, Expression<Func<TAggregate, object>> columns)
         {
@@ -66,6 +61,12 @@ namespace SmartPlayerAPI.Repository
                     .Include(columns)
                     .SingleOrDefaultAsync(criteria)
                     .ConfigureAwait(false);
+            return result;
+        }
+
+        public async Task<TAggregate> FindByCriteria(Expression<Func<TAggregate, bool>> criteria)
+        {
+            var result = await _dbSet.AsQueryable().Where(criteria).SingleOrDefaultAsync().ConfigureAwait(false);
             return result;
         }
     }

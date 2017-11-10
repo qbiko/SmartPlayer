@@ -1,0 +1,108 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SmartPlayerAPI.Repository.Interfaces;
+using SmartPlayerAPI.ViewModels.Modules;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using SmartPlayerAPI.Persistance.Models;
+using SmartPlayerAPI.ViewModels.Sensors;
+
+namespace SmartPlayerAPI.Controllers
+{
+    [Route("api/controller")]
+    public class ModuleController : Controller
+    {
+        private readonly IModuleRepository _moduleRepository;
+        private readonly IPlayerInGameRepository _playerInGameRepository;
+        private readonly IMapper _mapper;
+        public ModuleController(IModuleRepository moduleRepository, IMapper mapper, IPlayerInGameRepository playerInGameRepository)
+        {
+            _moduleRepository = moduleRepository;
+            _mapper = mapper;
+            _playerInGameRepository = playerInGameRepository;
+        }
+
+        [HttpPost("add")]
+        [ProducesResponseType(200, Type = typeof(ModuleOut))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> SaveModule([FromBody]ModuleIn moduleIn)
+        {
+            try
+            {
+                var module = await _moduleRepository.AddAsync(new Persistance.Models.Module() { MACAddress = moduleIn.MACAddress });
+                if (module != null)
+                {
+                    var result = _mapper.Map<ModuleOut>(module);
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("getCredentials")]
+        [ProducesResponseType(200, Type = typeof(PlayerInGameViewModel))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> SaveModule(string mac)
+        {
+            try
+            {
+                var module = await _moduleRepository.AddAsync(new Persistance.Models.Module() { MACAddress = mac });
+                if (module == null)
+                    return BadRequest();
+
+                var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.ModuleId == module.Id, i => i.Game);
+                if (playerInGame == null)
+                    return BadRequest();
+
+                var now = DateTimeOffset.Now;
+                var endOfMatchTime = playerInGame.Game.TimeOfStart.AddHours(3);
+                if(playerInGame.Game.TimeOfStart< now  && now <  endOfMatchTime) //dodac drugi parametr czas zakonczenia
+                {
+                    return Ok(new PlayerInGameViewModel() { GameId = playerInGame.GameId, PlayerId = playerInGame.PlayerId})
+                }
+                return BadRequest();
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("modules")]
+        [ProducesResponseType(200, Type = typeof(List<ModuleOut>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> GetModules()
+        {
+            try
+            {
+                var modules = await _moduleRepository.GetAll();
+                if (modules != null)
+                {
+                    var response = new List<ModuleOut>();
+                    foreach(var m in modules)
+                    {
+                        response.Add(_mapper.Map<ModuleOut>(m));
+                    }
+                 
+                    return Ok(response);
+                }
+
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+    }
+}

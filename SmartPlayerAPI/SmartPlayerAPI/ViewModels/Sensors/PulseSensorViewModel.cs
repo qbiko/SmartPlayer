@@ -44,8 +44,7 @@ namespace SmartPlayerAPI.ViewModels
     }
     public class PulseSensorBatch<T>
     {
-        public int PlayerId { get; set; }
-        public int GameId { get; set; }
+        public int ModuleMac { get; set; }
         public List<T> PulseList { get; set; } = new List<T>();
     }
 }
