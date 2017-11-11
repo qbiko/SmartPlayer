@@ -54,7 +54,7 @@ namespace SmartPlayerAPI.Controllers
         {
             try
             {
-                var module = await _moduleRepository.AddAsync(new Persistance.Models.Module() { MACAddress = mac });
+                var module = await _moduleRepository.FindByCriteria(i=>i.MACAddress.Equals(mac));
                 if (module == null)
                     return BadRequest();
 
@@ -66,7 +66,7 @@ namespace SmartPlayerAPI.Controllers
                 var endOfMatchTime = playerInGame.Game.TimeOfStart.AddHours(3);
                 if(playerInGame.Game.TimeOfStart< now  && now <  endOfMatchTime) //dodac drugi parametr czas zakonczenia
                 {
-                    return Ok(new PlayerInGameViewModel() { GameId = playerInGame.GameId, PlayerId = playerInGame.PlayerId})
+                    return Ok(new PlayerInGameViewModel() { GameId = playerInGame.GameId, PlayerId = playerInGame.PlayerId });
                 }
                 return BadRequest();
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SmartPlayerAPI.Repository.Interfaces;
 
 namespace SmartPlayerAPI.Controllers
 {
@@ -14,9 +15,11 @@ namespace SmartPlayerAPI.Controllers
     public class PlayerController : Controller
     {
         private readonly SmartPlayerContext _smartPlayerContext;
-        public PlayerController(SmartPlayerContext smartPlayerContext)
+        private readonly IPlayerInGameRepository _playerInGameRepository;
+        public PlayerController(SmartPlayerContext smartPlayerContext, IPlayerInGameRepository playerInGameRepository)
         {
             _smartPlayerContext = smartPlayerContext;
+            _playerInGameRepository = playerInGameRepository;
         }
 
         [HttpPost("create")]
@@ -166,6 +169,37 @@ namespace SmartPlayerAPI.Controllers
             return BadRequest("Id of players is not properly");
 
         }
+
+        //[HttpGet("playerInGame")]
+        //[ProducesResponseType(200, Type = typeof())]
+        //[ProducesResponseType(400, Type = typeof(Error))]
+        //[ProducesResponseType(401)]
+        //public async Task<IActionResult> GetPlayerInGame(string playerId, string gameId)
+        //{
+        //    int playerIdint = 0;
+        //    int gameIdint = 0;
+        //    if (int.TryParse(playerId, out playerIdint) && int.TryParse(gameId, out gameIdint))
+        //    {
+        //        var player =  _smartPlayerContext.Set<Player>().FirstOrDefault(i => i.Id == playerIdint);
+        //        var playerInGame = await _playerInGameRepository.FindByCriteria(i => i.PlayerId == playerIdint && i.GameId == gameIdint);
+        //        if (player != null)
+        //        {
+        //            return Ok(new PlayerViewModelOut()
+        //            {
+        //                Id = player.Id,
+        //                ClubId = player.ClubId,
+        //                DateOfBirth = player.DateOfBirth,
+        //                FirstName = player.FirstName,
+        //                LastName = player.LastName,
+        //                HeightOfUser = player.HeighOfUser,
+        //                WeightOfUser = player.WeightOfUser
+        //            });
+        //        }
+        //        return BadRequest("Player doeasn't exists");
+        //    }
+        //    return BadRequest("Id of players is not properly");
+
+        //}
 
         [HttpGet("gameplayers")]
         [ProducesResponseType(200, Type = typeof(List<PlayerInGameViewModelOutExtend>))]

@@ -18,4 +18,5 @@ namespace SmartPlayerAPI.ViewModels
     {
         public int Id { get; set; }
     }
+
 }
