@@ -25,7 +25,7 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(401)]
         public async Task<IActionResult> Post([FromBody]MockViewModel mock)
         {
-            var result = _smartPlayerContext.Add(new Mock() { Text = mock.Text, Number = mock.Number, CreatedAt = DateTimeOffset.Now });
+            var result = _smartPlayerContext.Add(new Mock() { Text = mock.Text, Number = mock.Number, CreatedAt = DateTimeOffset.UtcNow });
             await _smartPlayerContext.SaveChangesAsync();
             return Ok(result.Entity);
         }
@@ -60,7 +60,7 @@ namespace SmartPlayerAPI.Controllers
             {
                 var club = _smartPlayerContext.Add(new Club() {
                     Name = newClub.ClubName,
-                    DateOfCreate = DateTimeOffset.Now,
+                    DateOfCreate = DateTimeOffset.UtcNow,
                     PasswordHash = Convert.ToBase64String(Encoding.ASCII.GetBytes(newClub.Password))
                 });
                 await _smartPlayerContext.SaveChangesAsync();

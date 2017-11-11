@@ -59,15 +59,16 @@ namespace SmartPlayerAPI.Controllers
                     return BadRequest();
                 var playerInGame = ( await _playerInGameRepository.GetListWithInclude(i => i.ModuleId == module.Id, i => i.Game).ConfigureAwait(false)).Last();
                 if (playerInGame == null)
-                    return BadRequest();
+                    return BadRequest("Bad module mac");
 
-                var now = DateTimeOffset.Now;
-                var endOfMatchTime = playerInGame.Game.TimeOfStart.AddHours(3);
-                if(playerInGame.Game.TimeOfStart< now  && now <  endOfMatchTime) //dodac drugi parametr czas zakonczenia
+                var now = DateTimeOffset.UtcNow;
+                var endOfMatchTime = playerInGame.Game.TimeOfStart.AddHours(3).UtcDateTime;
+                var startOfMatch = playerInGame.Game.TimeOfStart.UtcDateTime;
+                if (startOfMatch.Ticks< now.Ticks && now.Ticks <  endOfMatchTime.Ticks) //dodac drugi parametr czas zakonczenia
                 {
-                    return Ok(new PlayerInGameViewModel() { GameId = playerInGame.GameId, PlayerId = playerInGame.PlayerId, ServerTime = DateTimeOffset.Now.Ticks });
+                    return Ok(new PlayerInGameViewModel() { GameId = playerInGame.GameId, PlayerId = playerInGame.PlayerId, ServerTime = DateTimeOffset.UtcNow.Ticks });
                 }
-                return BadRequest();
+                return BadRequest("Game is ended: "+$" Now:{now} | Start game:{startOfMatch} | End game: {endOfMatchTime}");
 
             }
             catch (Exception e)
@@ -100,7 +101,7 @@ namespace SmartPlayerAPI.Controllers
                     return Ok(response);
                 }
 
-                return BadRequest();
+                return BadRequest("Club have not any modules");
             }
             catch (Exception e)
             {

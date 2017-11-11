@@ -10,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SmartPlayerAPI.Extensions;
+using System.Runtime.InteropServices;
+using System.Linq.Expressions;
 
 namespace SmartPlayerAPI.Controllers
 {
@@ -54,7 +57,7 @@ namespace SmartPlayerAPI.Controllers
                 var result = _smartPlayerContext.Add(new PulseSensorResult()
                 {
                     Value = pulseSensorIn.Value,
-                    TimeOfOccur = DateTimeOffset.Now,
+                    TimeOfOccur = DateTimeOffset.UtcNow,
                     PlayerInGameId = playerInGame.Id
                 });
 
@@ -139,6 +142,79 @@ namespace SmartPlayerAPI.Controllers
 
         }
 
+        [HttpGet("pulseBatchWithScope")]
+        [ProducesResponseType(200, Type = typeof(List<PulseSensorViewModel>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> GetPulseForUserInMatch(int playerId, int gameId, int scope)
+        {
+            try
+            {
+                var playerInGame = await _smartPlayerContext
+                    .Set<PlayerInGame>()
+                    .AsQueryable()
+                    .Include(i => i.PulseSensorResults)
+                    .SingleOrDefaultAsync(i => i.PlayerId == playerId && i.GameId == gameId)
+                    .ConfigureAwait(false);
+
+                if (playerInGame == null)
+                    return BadRequest("check PlayerId or GameId");
+
+                if (playerInGame.PulseSensorResults == null)
+                    return BadRequest("No pulse sensor results");
+
+                var list = playerInGame.PulseSensorResults
+                    .ToList()
+                    .OrderBy(i => i.TimeOfOccur)
+                    .Select(i => new PulseSensorViewModel { Id = i.Id, TimeOfOccur = i.TimeOfOccur, Value = i.Value })
+                    .TakeLast(scope);
+
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpGet("pulseBatchWithStartDate")]
+        [ProducesResponseType(200, Type = typeof(List<PulseSensorViewModel>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> GetPulseBatchWithStartDate(int playerId, int gameId, DateTimeOffset startDate)
+        {
+            try
+            {
+                var playerInGame = await _smartPlayerContext
+                    .Set<PlayerInGame>()
+                    .AsQueryable()
+                    .Include(i => i.PulseSensorResults)
+                    .Include(i=>i.Game)
+                    .SingleOrDefaultAsync(i => i.PlayerId == playerId && i.GameId == gameId )
+                    .ConfigureAwait(false);
+
+                if (playerInGame == null)
+                    return BadRequest("check PlayerId or GameId");
+
+                if (playerInGame.PulseSensorResults == null)
+                    return BadRequest("No pulse sensor results");
+
+                var list = playerInGame.PulseSensorResults
+                    .ToList()
+                    .Where(i => i.TimeOfOccur >= startDate)
+                    .OrderBy(i => i.TimeOfOccur)
+                    .Select(i => new PulseSensorViewModel { Id = i.Id, TimeOfOccur = i.TimeOfOccur, Value = i.Value });
+
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+        }
+
         [HttpPost("location")]
         [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
@@ -149,7 +225,7 @@ namespace SmartPlayerAPI.Controllers
             if (playerInGame == null)
                 return BadRequest("Bad playerId or gameId");
 
-            var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.Now, PlayerInGameId = playerInGame.Id });
+            var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.UtcNow, PlayerInGameId = playerInGame.Id });
             if (location == null)
                 return BadRequest("Error during saving location coordinates in database");
 
