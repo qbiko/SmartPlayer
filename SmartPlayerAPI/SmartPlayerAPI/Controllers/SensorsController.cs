@@ -63,7 +63,7 @@ namespace SmartPlayerAPI.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
 
@@ -75,18 +75,15 @@ namespace SmartPlayerAPI.Controllers
         {
             try
             {
-                var module = await _moduleRepository.FindByCriteria(i => i.MACAddress.Equals(pulseSensorIn.ModuleMac));
-                if (module == null)
-                    return BadRequest("moduleId");
-
-                var playerInGame = await _smartPlayerContext.Set<PlayerInGame>().AsQueryable().SingleOrDefaultAsync(i => i.ModuleId == module.Id).ConfigureAwait(false);
+                var playerInGame = await _smartPlayerContext.Set<PlayerInGame>().AsQueryable().SingleOrDefaultAsync(i => i.PlayerId == pulseSensorIn.PlayerId && i.GameId == pulseSensorIn.GameId).ConfigureAwait(false);
                 if (playerInGame == null)
                 {
                     return BadRequest("Bad Game or PlayerId");
                 }
 
                 PulseSensorBatch<PulseSensorOutBatch> result = new PulseSensorBatch<PulseSensorOutBatch>();
-                result.ModuleMac = pulseSensorIn.ModuleMac;
+                result.PlayerId = pulseSensorIn.PlayerId;
+                result.GameId = pulseSensorIn.GameId;
                 foreach (var p in pulseSensorIn.PulseList)
                 {
                     var res =  await _smartPlayerContext.AddAsync(new PulseSensorResult()
@@ -111,19 +108,15 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(List<PulseSensorViewModel>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetPulseForUserInMatch(string moduleMac)
+        public async Task<IActionResult> GetPulseForUserInMatch(int playerId, int gameId)
         {
             try
             {
-                var module = await _moduleRepository.FindByCriteria(i => i.MACAddress.Equals(moduleMac));
-                if (module == null)
-                    return BadRequest("moduleId");
-                
                 var playerInGame = await _smartPlayerContext
                     .Set<PlayerInGame>()
                     .AsQueryable()
                     .Include(i => i.PulseSensorResults)
-                    .SingleOrDefaultAsync(m=>m.ModuleId == module.Id)
+                    .SingleOrDefaultAsync(i => i.PlayerId == playerId && i.GameId == gameId)
                     .ConfigureAwait(false);
 
                 if (playerInGame == null)
@@ -150,22 +143,18 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> SaveLocation([FromBody]PointWithMac viewModel)
+        public async Task<IActionResult> SaveLocation([FromBody]PointWithCredentials viewModel)
         {
-            var module = await _moduleRepository.FindByCriteria(i => i.MACAddress == viewModel.ModuleMac);
-            if (module != null)
-            {
-                var playerInGame = await _playerInGameRepository.FindByCriteria(i => i.ModuleId == module.Id);
-                if (playerInGame == null)
-                    return BadRequest("Bad playerId or gameId");
+            var playerInGame = await _playerInGameRepository.FindByCriteria(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId);
+            if (playerInGame == null)
+                return BadRequest("Bad playerId or gameId");
 
-                var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.Now, PlayerInGameId = playerInGame.Id });
-                if (location == null)
-                    return BadRequest("Error during saving location coordinates in database");
+            var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.Now, PlayerInGameId = playerInGame.Id });
+            if (location == null)
+                return BadRequest("Error during saving location coordinates in database");
 
-                return Ok(true);
-            }
-            return BadRequest();
+            return Ok();
+
 
         }
 
@@ -177,9 +166,13 @@ namespace SmartPlayerAPI.Controllers
         {
             var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId, i => i.GPSLocations);
             var listOfCoordinates = playerInGame.GPSLocations.ToList();
-            var response = _mapper.Map<List<PointInTime>>(listOfCoordinates);
-
-            return Ok(response);
+            var responseList = new List<PointInTime>();
+            foreach (var point in listOfCoordinates)
+            {
+                responseList.Add(_mapper.Map<PointInTime>(point));
+            }
+ 
+            return Ok(responseList);
 
         }
     }

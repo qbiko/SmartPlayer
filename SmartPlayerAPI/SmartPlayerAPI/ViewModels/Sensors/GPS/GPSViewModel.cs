@@ -14,7 +14,7 @@ namespace SmartPlayerAPI.ViewModels.Sensors.GPS
         public double? Lat { get; set; }
         public double? Lng { get; set; }
     }
-    public class PointWithMac: GPSViewModel
+    public class PointWithCredentials: GPSPlayerInGame
     {
         public double? Lat { get; set; }
         public double? Lng { get; set; }

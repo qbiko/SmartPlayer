@@ -16,5 +16,7 @@ namespace SmartPlayerAPI.Persistance.Models
         public virtual ICollection<Player> Players { get; set; }
         [JsonIgnore]
         public virtual ICollection<Game> Games { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Module> Modules { get; set; }
     }
 }

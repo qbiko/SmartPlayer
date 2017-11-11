@@ -15,9 +15,9 @@ namespace SmartPlayerAPI.Repository.Persistence
         {
         }
 
-        public async Task<List<Module>> GetAll()
+        public async Task<List<Module>> GetAll(int clubId)
         {
-            var result =  _dbSet.AsQueryable().Select(i => i).ToList();
+            var result =  _dbSet.AsQueryable().Where(i => i.ClubId==clubId).ToList();
             return result;
         }
     }

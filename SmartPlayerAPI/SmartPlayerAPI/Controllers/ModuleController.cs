@@ -32,7 +32,7 @@ namespace SmartPlayerAPI.Controllers
         {
             try
             {
-                var module = await _moduleRepository.AddAsync(new Persistance.Models.Module() { MACAddress = moduleIn.MACAddress });
+                var module = await _moduleRepository.AddAsync(new Persistance.Models.Module() { MACAddress = moduleIn.MACAddress, ClubId = moduleIn.ClubId});
                 if (module != null)
                 {
                     var result = _mapper.Map<ModuleOut>(module);
@@ -66,7 +66,7 @@ namespace SmartPlayerAPI.Controllers
                 var endOfMatchTime = playerInGame.Game.TimeOfStart.AddHours(3);
                 if(playerInGame.Game.TimeOfStart< now  && now <  endOfMatchTime) //dodac drugi parametr czas zakonczenia
                 {
-                    return Ok(new PlayerInGameViewModel() { GameId = playerInGame.GameId, PlayerId = playerInGame.PlayerId });
+                    return Ok(new PlayerInGameViewModel() { GameId = playerInGame.GameId, PlayerId = playerInGame.PlayerId, ServerTime = DateTimeOffset.Now.Ticks });
                 }
                 return BadRequest();
 
@@ -81,11 +81,15 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(List<ModuleOut>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetModules()
+        public async Task<IActionResult> GetModules(string clubId)
         {
             try
             {
-                var modules = await _moduleRepository.GetAll();
+                int id = 0;
+                if (!int.TryParse(clubId, out id))
+                    return BadRequest();
+
+                var modules = await _moduleRepository.GetAll(id);
                 if (modules != null)
                 {
                     var response = new List<ModuleOut>();

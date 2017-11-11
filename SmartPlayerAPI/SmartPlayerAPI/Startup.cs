@@ -57,10 +57,10 @@ namespace SmartPlayerAPI
                 o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddScoped<IAccelerometerAndGyroscopeRepository, AccelerometerAndGyroscopeRepository>();
-            services.AddScoped<IGPSLocationRepository, GPSLocationRepository>();
-            services.AddScoped<IPlayerInGameRepository, PlayerInGameRepository>();
-            services.AddScoped<IModuleRepository, ModuleRepository>();
+            services.AddSingleton<IAccelerometerAndGyroscopeRepository, AccelerometerAndGyroscopeRepository>();
+            services.AddSingleton<IGPSLocationRepository, GPSLocationRepository>();
+            services.AddSingleton<IPlayerInGameRepository, PlayerInGameRepository>();
+            services.AddSingleton<IModuleRepository, ModuleRepository>();
 
             services.AddMvc();
         }

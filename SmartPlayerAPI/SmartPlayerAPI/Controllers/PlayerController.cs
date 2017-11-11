@@ -97,8 +97,8 @@ namespace SmartPlayerAPI.Controllers
                     var playerInGame = await _smartPlayerContext.Set<PlayerInGame>().FirstOrDefaultAsync(i => i.PlayerId == playerIdInt && i.GameId == gameIdInt);
                     if(playerInGame!=null)
                     {
-                        var result = _smartPlayerContext.Set<PlayerInGame>().Remove(playerInGame);
-                        await _smartPlayerContext.SaveChangesAsync();
+                        playerInGame.Active = false;
+                        var result = _playerInGameRepository.Update(playerInGame);
                     }
 
 
@@ -219,7 +219,7 @@ namespace SmartPlayerAPI.Controllers
                     foreach(var p in playerInGmaes)
                     {
                         var player = await _smartPlayerContext.Set<Player>().FirstOrDefaultAsync(i => i.Id == p.PlayerId);
-                        if (player != null)
+                        if (player != null && p.Active)
                         {
                             players.Add(new PlayerInGameViewModelOutExtend()
                             {

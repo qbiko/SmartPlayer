@@ -28,6 +28,7 @@ namespace SmartPlayerAPI.Persistance
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Club>().ToTable("Club");
             modelBuilder.Entity<Club>().HasKey(o => o.Id);
+            modelBuilder.Entity<Club>().HasMany(o => o.Modules).WithOne(o => o.Club);
 
             modelBuilder.Entity<Game>().ToTable("Game");
             modelBuilder.Entity<Game>().HasKey(o => o.Id);
@@ -64,6 +65,7 @@ namespace SmartPlayerAPI.Persistance
             modelBuilder.Entity<Module>().ToTable("Module");
             modelBuilder.Entity<Module>().HasKey(o => o.Id);
             modelBuilder.Entity<Module>().HasMany(o => o.PlayerInGames).WithOne(i => i.Module);
+            modelBuilder.Entity<Module>().HasOne(o => o.Club).WithMany(o => o.Modules);
         }
     }
 }

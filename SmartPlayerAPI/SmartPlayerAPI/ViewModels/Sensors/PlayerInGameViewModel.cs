@@ -9,5 +9,6 @@ namespace SmartPlayerAPI.ViewModels.Sensors
     {
         public int? PlayerId { get; set; }
         public int? GameId { get; set; }
+        public long ServerTime { get; set; }
     }
 }

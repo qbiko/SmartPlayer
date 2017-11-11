@@ -10,6 +10,6 @@ namespace SmartPlayerAPI.Repository.Interfaces
 {
     public interface IModuleRepository : IRepository<Module>
     {
-        Task<List<Module>> GetAll();
+        Task<List<Module>> GetAll(int clubId);
     }
 }

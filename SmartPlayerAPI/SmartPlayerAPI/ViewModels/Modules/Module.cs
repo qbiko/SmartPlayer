@@ -8,6 +8,7 @@ namespace SmartPlayerAPI.ViewModels.Modules
     public class ModuleIn
     {
         public string MACAddress { get; set; }
+        public int ClubId { get; set; }
     }
     public class ModuleOut : ModuleIn
     {
