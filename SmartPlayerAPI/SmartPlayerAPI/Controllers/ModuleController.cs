@@ -57,8 +57,7 @@ namespace SmartPlayerAPI.Controllers
                 var module = await _moduleRepository.FindByCriteria(i=>i.MACAddress.Equals(mac));
                 if (module == null)
                     return BadRequest();
-
-                var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.ModuleId == module.Id, i => i.Game);
+                var playerInGame = ( await _playerInGameRepository.GetListWithInclude(i => i.ModuleId == module.Id, i => i.Game).ConfigureAwait(false)).Last();
                 if (playerInGame == null)
                     return BadRequest();
 

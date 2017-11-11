@@ -8,3 +8,4 @@ C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\obj\
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\obj\Debug\netcoreapp2.0\SmartPlayerAPI.AssemblyInfo.cs
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\obj\Debug\netcoreapp2.0\SmartPlayerAPI.dll
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\obj\Debug\netcoreapp2.0\SmartPlayerAPI.pdb
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerAPI\obj\Debug\netcoreapp2.0\SmartPlayerAPI.csprojResolveAssemblyReference.cache
