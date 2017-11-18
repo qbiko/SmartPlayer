@@ -66,7 +66,7 @@ namespace SmartPlayerAPI.Controllers
                 var startOfMatch = playerInGame.Game.TimeOfStart.UtcDateTime;
                 if (startOfMatch.Ticks< now.Ticks && now.Ticks <  endOfMatchTime.Ticks) //dodac drugi parametr czas zakonczenia
                 {
-                    return Ok(new PlayerInGameViewModel() { GameId = playerInGame.GameId, PlayerId = playerInGame.PlayerId, ServerTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() });
+                    return Ok(new PlayerInGameViewModel() { GameId = playerInGame.GameId, PlayerId = playerInGame.PlayerId, ServerTime = (now.ToUnixTimeMilliseconds() - playerInGame.Game.TimeOfStart.ToUnixTimeMilliseconds()), Now = now, StartGame = playerInGame.Game.TimeOfStart });
                 }
                 return BadRequest("Game is ended: "+$" Now:{now} | Start game:{startOfMatch} | End game: {endOfMatchTime}");
 

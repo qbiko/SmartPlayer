@@ -19,37 +19,6 @@ namespace SmartPlayerAPI.Controllers
             _smartPlayerContext = smartPlayerContext;
         }
 
-        [HttpPost("dbtest")]
-        [ProducesResponseType(200, Type = typeof(Mock))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        public async Task<IActionResult> Post([FromBody]MockViewModel mock)
-        {
-            var result = _smartPlayerContext.Add(new Mock() { Text = mock.Text, Number = mock.Number, CreatedAt = DateTimeOffset.UtcNow });
-            await _smartPlayerContext.SaveChangesAsync();
-            return Ok(result.Entity);
-        }
-
-        [HttpPost("decimal")]
-        [ProducesResponseType(200, Type = typeof(decimal))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        public async Task<IActionResult> Post(decimal value)
-        {
-
-            return Ok(value);
-        }
-
-        [HttpPost("string")]
-        [ProducesResponseType(200, Type = typeof(decimal))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        public async Task<IActionResult> PostString(string value)
-        {
-
-            return Ok(value);
-        }
-
         [HttpPost("register")]
         [ProducesResponseType(200, Type = typeof(ClubViewModel))]
         [ProducesResponseType(400)]

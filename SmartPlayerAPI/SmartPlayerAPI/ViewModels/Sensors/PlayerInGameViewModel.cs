@@ -10,5 +10,7 @@ namespace SmartPlayerAPI.ViewModels.Sensors
         public int? PlayerId { get; set; }
         public int? GameId { get; set; }
         public long ServerTime { get; set; }
+        public DateTimeOffset Now { get; set; }
+        public DateTimeOffset StartGame { get; set; }
     }
 }

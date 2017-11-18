@@ -182,11 +182,15 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(200, Type = typeof(List<PulseSensorViewModel>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetPulseBatchWithStartDate(int playerId, int gameId, DateTimeOffset startDate)
+        public async Task<IActionResult> GetPulseBatchWithStartDate(int playerId, int gameId, string startDateString)
         {
-            return BadRequest($"{startDate}");
+
             try
             {
+                DateTimeOffset startDate;
+                if (!DateTimeOffset.TryParse(startDateString, out startDate))
+                    return BadRequest("Bad format of startDateString, cannot parse");
+
                 var playerInGame = await _smartPlayerContext
                     .Set<PlayerInGame>()
                     .AsQueryable()
