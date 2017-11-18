@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SmartPlayerAPI.Migrations
 {
-    public partial class init : Migration
+    public partial class database : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,11 +16,27 @@ namespace SmartPlayerAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     DateOfCreate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Club", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mock",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Number = table.Column<double>(type: "float", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mock", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,6 +61,26 @@ namespace SmartPlayerAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Module",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClubId = table.Column<int>(type: "int", nullable: true),
+                    MACAddress = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Module", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Module_Club_ClubId",
+                        column: x => x.ClubId,
+                        principalTable: "Club",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Player",
                 columns: table => new
                 {
@@ -53,7 +89,7 @@ namespace SmartPlayerAPI.Migrations
                     ClubId = table.Column<int>(type: "int", nullable: false),
                     DateOfBirth = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HeightOfUser = table.Column<int>(type: "int", nullable: false),
+                    HeighOfUser = table.Column<int>(type: "int", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WeightOfUser = table.Column<int>(type: "int", nullable: false)
                 },
@@ -76,6 +112,7 @@ namespace SmartPlayerAPI.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     GameId = table.Column<int>(type: "int", nullable: true),
+                    ModuleId = table.Column<int>(type: "int", nullable: true),
                     Number = table.Column<int>(type: "int", nullable: false),
                     PlayerId = table.Column<int>(type: "int", nullable: true),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -87,6 +124,12 @@ namespace SmartPlayerAPI.Migrations
                         name: "FK_PlayerInGame_Game_GameId",
                         column: x => x.GameId,
                         principalTable: "Game",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PlayerInGame_Module_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Module",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -103,6 +146,8 @@ namespace SmartPlayerAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Lat = table.Column<double>(type: "float", nullable: false),
+                    Lng = table.Column<double>(type: "float", nullable: false),
                     PlayerInGameId = table.Column<int>(type: "int", nullable: false),
                     TimeOfOccur = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     X = table.Column<int>(type: "int", nullable: false),
@@ -113,6 +158,28 @@ namespace SmartPlayerAPI.Migrations
                     table.PrimaryKey("PK_AccelerometerAndGyroscopeResult", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AccelerometerAndGyroscopeResult_PlayerInGame_PlayerInGameId",
+                        column: x => x.PlayerInGameId,
+                        principalTable: "PlayerInGame",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GPSLocation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Lat = table.Column<double>(type: "float", nullable: true),
+                    Lng = table.Column<double>(type: "float", nullable: true),
+                    PlayerInGameId = table.Column<int>(type: "int", nullable: false),
+                    TimeOfOccur = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GPSLocation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GPSLocation_PlayerInGame_PlayerInGameId",
                         column: x => x.PlayerInGameId,
                         principalTable: "PlayerInGame",
                         principalColumn: "Id",
@@ -151,6 +218,16 @@ namespace SmartPlayerAPI.Migrations
                 column: "ClubId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GPSLocation_PlayerInGameId",
+                table: "GPSLocation",
+                column: "PlayerInGameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Module_ClubId",
+                table: "Module",
+                column: "ClubId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Player_ClubId",
                 table: "Player",
                 column: "ClubId");
@@ -159,6 +236,11 @@ namespace SmartPlayerAPI.Migrations
                 name: "IX_PlayerInGame_GameId",
                 table: "PlayerInGame",
                 column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlayerInGame_ModuleId",
+                table: "PlayerInGame",
+                column: "ModuleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlayerInGame_PlayerId",
@@ -177,6 +259,12 @@ namespace SmartPlayerAPI.Migrations
                 name: "AccelerometerAndGyroscopeResult");
 
             migrationBuilder.DropTable(
+                name: "GPSLocation");
+
+            migrationBuilder.DropTable(
+                name: "Mock");
+
+            migrationBuilder.DropTable(
                 name: "PulseSensorResult");
 
             migrationBuilder.DropTable(
@@ -184,6 +272,9 @@ namespace SmartPlayerAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Game");
+
+            migrationBuilder.DropTable(
+                name: "Module");
 
             migrationBuilder.DropTable(
                 name: "Player");

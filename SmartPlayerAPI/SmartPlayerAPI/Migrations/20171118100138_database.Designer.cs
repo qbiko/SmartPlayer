@@ -11,8 +11,8 @@ using System;
 namespace SmartPlayerAPI.Migrations
 {
     [DbContext(typeof(SmartPlayerContext))]
-    [Migration("20171107205826_1")]
-    partial class _1
+    [Migration("20171118100138_database")]
+    partial class database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,9 +120,13 @@ namespace SmartPlayerAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("ClubId");
+
                     b.Property<string>("MACAddress");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClubId");
 
                     b.ToTable("Module");
                 });
@@ -219,6 +223,13 @@ namespace SmartPlayerAPI.Migrations
                         .WithMany("GPSLocations")
                         .HasForeignKey("PlayerInGameId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Module", b =>
+                {
+                    b.HasOne("SmartPlayerAPI.Persistance.Models.Club", "Club")
+                        .WithMany("Modules")
+                        .HasForeignKey("ClubId");
                 });
 
             modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Player", b =>

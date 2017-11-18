@@ -184,6 +184,7 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(401)]
         public async Task<IActionResult> GetPulseBatchWithStartDate(int playerId, int gameId, DateTimeOffset startDate)
         {
+            return BadRequest($"{startDate}");
             try
             {
                 var playerInGame = await _smartPlayerContext
