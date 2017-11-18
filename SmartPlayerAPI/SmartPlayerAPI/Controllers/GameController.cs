@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartPlayerAPI.Persistance;
 using SmartPlayerAPI.Persistance.Models;
+using SmartPlayerAPI.Repository.Interfaces;
 using SmartPlayerAPI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,11 @@ namespace SmartPlayerAPI.Controllers
     public class GameController : Controller
     {
         private readonly SmartPlayerContext _smartPlayerContext;
-        public GameController(SmartPlayerContext smartPlayerContext)
+        private readonly IGameRepository _gameRepository;
+        public GameController(IGameRepository gameRepository, SmartPlayerContext smartPlayerContext)
         {
             _smartPlayerContext = smartPlayerContext;
+            _gameRepository = gameRepository;
         }
 
         [HttpPost("create")]
@@ -26,15 +29,14 @@ namespace SmartPlayerAPI.Controllers
         {
             try
             {
-                var game = _smartPlayerContext.Add(new Game()
+                var game = await _gameRepository.AddAsync(new Game()
                 {
                     NameOfGame = newGame.NameOfGame,
                     TimeOfStart = newGame.TimeOfStart,
                     ClubId = newGame.ClubId
                 });
-                await _smartPlayerContext.SaveChangesAsync();
 
-                return Ok(game.Entity);
+                return Ok(game);
             }
             catch (Exception e)
             {

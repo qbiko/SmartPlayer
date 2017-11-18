@@ -61,7 +61,7 @@ namespace SmartPlayerAPI
             services.AddScoped<IGPSLocationRepository, GPSLocationRepository>();
             services.AddScoped<IPlayerInGameRepository, PlayerInGameRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
-
+            services.AddScoped<IGameRepository, GameRepository>();
             services.AddMvc();
         }
 
