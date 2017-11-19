@@ -40,4 +40,9 @@ namespace SmartPlayerAPI.ViewModels.Sensors.GPS
         public double Y { get; set; }
         public DateTimeOffset TimeOfOccur { get; set; }
     }
+    public class GPSBatch
+    {
+        public int PlayerId { get; set; }
+        public List<CartesianPointsInTime> ListOfPositions { get; set; } = new List<CartesianPointsInTime>();
+    }
 }

@@ -272,10 +272,10 @@ namespace SmartPlayerAPI.Controllers
         }
 
         [HttpGet("locationsBatch")]
-        [ProducesResponseType(200, Type = typeof(List<CartesianPointsInTime>))]
+        [ProducesResponseType(200, Type = typeof(List<GPSBatch>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetLocationsBatch(int playerId, int gameId, string startDateString)
+        public async Task<IActionResult> GetLocationsBatch(int gameId, string startDateString, params int[] playerIds)
         {
             try
             {
@@ -283,16 +283,23 @@ namespace SmartPlayerAPI.Controllers
                 if (!DateTimeOffset.TryParse(startDateString, out startDate))
                     return BadRequest("Bad format of startDateString, cannot parse");
 
-                var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == playerId && i.GameId == gameId, i => i.GPSLocations);
-                if (playerInGame == null)
-                    return BadRequest("Bad playerId or gameId");
+                var gpsBatch = new List<GPSBatch>();
+                foreach(var playerId in playerIds)
+                {
+                    var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == playerId && i.GameId == gameId, i => i.GPSLocations);
+                    if (playerInGame == null)
+                        return BadRequest("Bad playerId or gameId");
 
-                var listOfCoordinates = playerInGame.GPSLocations
-                    .Where(i => i.TimeOfOccur >= startDate)
-                    .OrderBy(i => i.TimeOfOccur)
-                    .Select(i => new CartesianPointsInTime() { X = i.X, Y = i.Y, TimeOfOccur = i.TimeOfOccur });
-                   
-                return Ok(listOfCoordinates);
+                    var listOfCoordinates = playerInGame.GPSLocations
+                        .Where(i => i.TimeOfOccur >= startDate)
+                        .OrderBy(i => i.TimeOfOccur)
+                        .Select(i => new CartesianPointsInTime() { X = i.X, Y = i.Y, TimeOfOccur = i.TimeOfOccur })
+                        .ToList();
+
+                    gpsBatch.Add(new GPSBatch() { PlayerId = playerId, ListOfPositions = listOfCoordinates });
+                }
+
+                return Ok(gpsBatch);
             }
             catch(Exception e)
             {
