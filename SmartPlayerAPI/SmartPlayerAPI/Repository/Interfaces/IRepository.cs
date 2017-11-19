@@ -14,6 +14,7 @@ namespace SmartPlayerAPI.Repository.Interfaces
         Task<TAggregate> FindById(int id);
         Task<TAggregate> FindByCriteria(Expression<Func<TAggregate, bool>> criteria);
         Task<TAggregate> FindWithInclude(Expression<Func<TAggregate, bool>> criteria, Expression<Func<TAggregate, object>> columns);
+        Task<List<TAggregate>> GetAll();
 
     }
 }

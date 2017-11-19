@@ -69,5 +69,11 @@ namespace SmartPlayerAPI.Repository
             var result = await _dbSet.AsQueryable().Where(criteria).SingleOrDefaultAsync().ConfigureAwait(false);
             return result;
         }
+
+        public async Task<List<TAggregate>> GetAll()
+        {
+            var result = await _dbSet.AsQueryable().Select(i => i).ToListAsync();
+            return result;
+        }
     }
 }

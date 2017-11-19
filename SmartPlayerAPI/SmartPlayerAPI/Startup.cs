@@ -70,6 +70,7 @@ namespace SmartPlayerAPI
             services.AddScoped<IPlayerInGameRepository, PlayerInGameRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IPitchRepository, PitchRepository>();
             services.AddMvc();
         }
 
