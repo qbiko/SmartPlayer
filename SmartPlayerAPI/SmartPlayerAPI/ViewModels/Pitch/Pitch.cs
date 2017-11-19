@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 
 namespace SmartPlayerAPI.ViewModels.Pitch
 {
-    public class PitchIn
+    public class PitchCornersPoints
+    {
+        public GPSPoint LeftUpPoint { get; set; }
+        public GPSPoint LeftDownPoint { get; set; }
+        public GPSPoint RightUpPoint { get; set; }
+        public GPSPoint RightDownPoint { get; set; }
+    }
+    public class PitchIn : PitchCornersPoints
     {
         public string NameOfPitch { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
         public string Zip { get; set; }
-        public GPSPoint LeftUpPoint { get; set; }
-        public GPSPoint LeftDownPoint { get; set; }
-        public GPSPoint RightUpPoint { get; set; }
-        public GPSPoint RightDownPoint { get; set; }
     }
     public class PitchOut : PitchIn
     {
