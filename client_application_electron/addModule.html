@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dodawanie modułu</title>
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/addModule.js"></script>
+</head>
+
+<body>
+  <form id="addModuleForm" onsubmit="return false">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div id="statusMessage" class="medium-6 cell callout success is-hidden">
+          <p class="text-center">Nowy moduł został dodany.</p>
+        </div>
+        <div class="medium-6 cell">
+          <label>Adres MAC:
+            <input type="text" pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})" required="required" id="macAddress" name="Adres MAC" placeholder="Adres MAC">
+          </label>
+          <span id="macAddressMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <div class="expanded button-group">
+            <button onclick="addModule()" type="submit" class="button primary">Dodaj moduł</button>
+            <a onclick="closeAddModuleWindow()" class="button secondary">Anuluj</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div id="createAnimation" class="grid-x is-hidden">
+    <div class="cell"><div class="preloader"></div></div>
+  </div>
+</body>
+</html>

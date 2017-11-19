@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dodawanie piłkarza</title>
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/addPlayer.js"></script>
+</head>
+
+<body>
+  <div class="grid-container">
+    <div class="grid-x grid-padding-x">
+      <div class="medium-6 cell">
+        <ul class="menu">
+          <li id="newPlayer" onclick="changeForm()" class="is-active"><a>Dodaj nowego piłkarza</a></li>
+          <li id="playerFromList"><a onclick="changeForm()">Wybierz piłkarza z listy</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <form id="addPlayerForm" onsubmit="return false">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div id="statusMessage" class="medium-6 cell callout success is-hidden">
+          <p class="text-center">Nowy zawodnik został dodany.</p>
+        </div>
+        <div class="medium-6 cell">
+          <label>Imię:
+            <input type="text" id="firstname" name="Imię" placeholder="Imię">
+          </label>
+          <span id="firstnameMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Nazwisko:
+            <input type="text" id="lastname" name="Nazwisko" placeholder="Nazwisko">
+          </label>
+          <span id="lastnameMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Data urodzenia:
+            <input type="date" id="dateOfBirth" name="Data urodzenia" placeholder="Data urodzenia" min="1900-01-01" max="2018-01-01" required>
+          </label>
+          <span id="dateOfBirthMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Wzrost (cm):
+            <input type="number" id="height" name="Wzrost" placeholder="Wzrost" min="1" max="300" required>
+          </label>
+          <span id="heightMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Waga (kg):
+            <input type="number" id="weight" name="Waga" placeholder="Waga" min="1" max="300" required>
+          </label>
+          <span id="weightMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <div class="expanded button-group">
+            <button onclick="addPlayer()" type="submit" class="button primary">Dodaj piłkarza</button>
+            <a onclick="closeAddPlayerWindow()" class="button secondary">Anuluj</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <form id="chooseFromListForm" class="is-hidden" onsubmit="return false">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="medium-6 cell">
+          <select id="players" size="18">
+          </select>
+        </div>
+        <div class="medium-6 cell">
+          <label>Numer:
+            <input type="number" id="number" name="Numer" placeholder="Numer" min="1" max="99" required>
+          </label>
+          <span id="numberMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Pozycja:
+            <select id="positions">
+              <option value="gk">bramkarz</option>
+              <option value="def">obrońca</option>
+              <option value="mid">pomocnik</option>
+              <option value="att">napastnik</option>
+            </select>
+          </label>
+        </div>
+        <div class="medium-6 cell">
+          <label>Moduł:
+            <select id="modules">
+            </select>
+          </label>
+        </div>
+        <div class="medium-6 cell">
+          <div class="expanded button-group">
+            <button onclick="chooseFromList()" type="submit" class="button primary">Wybierz</button>
+            <a onclick="closeAddPlayerWindow()" class="button secondary">Anuluj</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div id="createAnimation" class="grid-x is-hidden">
+    <div class="cell"><div class="preloader"></div></div>
+  </div>
+</body>
+</html>
