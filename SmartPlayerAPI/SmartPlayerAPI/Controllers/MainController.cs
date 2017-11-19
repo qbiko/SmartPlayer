@@ -52,13 +52,13 @@ namespace SmartPlayerAPI.Controllers
             try
             {
                 var findClub = _smartPlayerContext.Club.FirstOrDefault(i => i.Name == clubName);
-                if(findClub==null)
+                if (findClub == null)
                 {
-                    return BadRequest(new Error() { Success = false, Message = "Club doesn't exist"});
+                    return BadRequest(new Error() { Success = false, Message = "Club doesn't exist" });
                 }
                 if (findClub.PasswordHash.Equals(Convert.ToBase64String(Encoding.ASCII.GetBytes(password))))
                 {
-                    return Ok(new { Success = true, id = findClub.Id});
+                    return Ok(new { Success = true, id = findClub.Id });
                 }
                 return BadRequest(new Error() { Success = false, Message = "Bad password" });
             }
@@ -68,17 +68,5 @@ namespace SmartPlayerAPI.Controllers
             }
 
         }
-
-        [HttpPost("sensors")]
-        [ProducesResponseType(200, Type = typeof(SensorsDataViewModel))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        public async Task<IActionResult> CreateDataFromSensors([FromBody] SensorsDataViewModel coordinates)
-        {
-
-            return Ok(coordinates);
-        }
-
-
     }
 }

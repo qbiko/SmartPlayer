@@ -1,0 +1,14 @@
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\SmartPlayerTests.deps.json
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\SmartPlayerTests.runtimeconfig.json
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\SmartPlayerTests.runtimeconfig.dev.json
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\SmartPlayerTests.dll
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\obj\Debug\netcoreapp2.0\SmartPlayerTests.csprojResolveAssemblyReference.cache
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\obj\Debug\netcoreapp2.0\SmartPlayerTests.csproj.CoreCompileInputs.cache
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\obj\Debug\netcoreapp2.0\SmartPlayerTests.AssemblyInfoInputs.cache
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\obj\Debug\netcoreapp2.0\SmartPlayerTests.AssemblyInfo.cs
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\SmartPlayerTests.pdb
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\obj\Debug\netcoreapp2.0\SmartPlayerTests.dll
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\obj\Debug\netcoreapp2.0\SmartPlayerTests.pdb
