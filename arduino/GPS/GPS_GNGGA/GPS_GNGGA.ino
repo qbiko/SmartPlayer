@@ -1,7 +1,7 @@
 #include "SoftwareSerial.h"
 
-#define PC_BAUDRATE   19200
-#define GPS_BAUDRATE  19200
+#define PC_BAUDRATE   9600
+#define GPS_BAUDRATE  9600
 #define GPS_RX        3
 #define GPS_TX        2
 
@@ -14,6 +14,10 @@ double lon;
 double utc; 
 
 void setup() {
+    Serial.begin(PC_BAUDRATE);
+    ss.begin(GPS_BAUDRATE);
+    
+    configGPS();
 }
 
 void loop(){
@@ -22,11 +26,33 @@ void loop(){
   delay(20);
 }
 
+void configGPS(){
+
+  //Ustawia częstotliwość GPS na 500ms
+   byte packet[] = {
+        0xB5, // sync char 1
+        0x62, // sync char 2
+        0x06, // class
+        0x08, // id
+        0x06, // length
+        0x00, // length
+        0xF4, // payload
+        0x01, // payload
+        0x01, // payload
+        0x00, // payload
+        0x01, // payload
+        0x00, // payload
+        0x0B, // CK_A
+        0x77, // CK_B
+    };
+    
+  for (byte i = 0; i < sizeof(packet); i++) {
+        ss.write(packet[i]);
+    }
+ 
+}
 
 void findLatAndLon(){
-    Serial.begin(PC_BAUDRATE);
-    ss.begin(GPS_BAUDRATE);
-    
     lat = 0;
     lon = 0;
     utc = 0;
@@ -53,6 +79,18 @@ void encode(){
      if(!isCommandEquals()) continue;
      
      if(read() != 44) continue; // 44 = ','
+      //==========================================UTC=============================================
+      float multipler = 100000.0;
+      
+      while (true){
+        byte r = read();
+        if(r == 46) continue; //46 = '.'
+        if(r == 44) break; //44 = ','
+        
+        utc += (r - 48) * multipler; // Kolejne cyfry czasu UTC
+        multipler /= 10.0;
+      } 
+      //===========================================================================================
 
      //=======================================================================================
      //Wysokość w formacie ddmm.mm (i tak dalej m)
@@ -66,7 +104,7 @@ void encode(){
 
       float rest = 0;
 
-      float multipler = 10.0;
+      multipler = 10.0;
 
       while (true){
         byte r = read();
@@ -83,6 +121,7 @@ void encode(){
         lat *= -1;
       if(read() != 44) //44 = ','
         continue;
+      //===========================================================================================
       //==========================================================================================
       //Szerokość w formacie dddmm.mm (i tak dalej m)
       
@@ -116,18 +155,7 @@ void encode(){
 
       if(read() != 44) //44 = ','
         break;
-      //==========================================================================================
-      multipler = 100000.0;
-      
-      while (true){
-        byte r = read();
-        if(r == 46) continue; //46 = '.'
-        if(r == 44) break; //44 = ','
-        
-        utc += (r - 48) * multipler; // Kolejne cyfry czasu UTC
-        multipler /= 10.0;
-      } 
-
+      //===========================================================================================
       if(read() == 86) //86 = 'V' = data invalid
         continue;
 
@@ -149,6 +177,6 @@ bool isCommandEquals(){
     return command[0] == 71 &&  // 71 = 'G'
             command[1] == 78 && // 78 = 'N'
             command[2] == 71 && // 71 = 'G'
-            command[3] == 76 && // 76 = 'L'
-            command[4] == 76;   // 76 = 'L'
+            command[3] == 71 && // 71 = 'G'
+            command[4] == 65;   // 65 = 'A'
 }
