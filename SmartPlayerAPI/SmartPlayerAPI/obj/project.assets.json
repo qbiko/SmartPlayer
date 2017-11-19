@@ -38,6 +38,21 @@
           "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
+      "GeoCoordinate/2.0.1": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.0"
+        }
+      },
+      "GeoCoordinate.NetCore/1.0.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.6/GeoCoordinate.NetCore.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/GeoCoordinate.NetCore.dll": {}
+        }
+      },
       "Libuv/1.10.0": {
         "type": "package",
         "dependencies": {
@@ -4874,6 +4889,28 @@
         "automapper.extensions.microsoft.dependencyinjection.3.1.0.nupkg.sha512",
         "automapper.extensions.microsoft.dependencyinjection.nuspec",
         "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll"
+      ]
+    },
+    "GeoCoordinate/2.0.1": {
+      "sha512": "Am5GANF7uS3vlYBHExLtouH/Yrsc+6182nTdxXfnYCCVF/mO6TRO5QQhJVWXd5PjVdNnb6rHbkHiDR9verwnig==",
+      "type": "package",
+      "path": "geocoordinate/2.0.1",
+      "files": [
+        "geocoordinate.2.0.1.nupkg.sha512",
+        "geocoordinate.nuspec",
+        "src/GeoCoordinate.cs",
+        "src/GeoPosition.cs"
+      ]
+    },
+    "GeoCoordinate.NetCore/1.0.0.1": {
+      "sha512": "xgzm8XZZkesAbtPJNgwBdWjWLcw+0oi19nSzwtQdzThkfw7k6oQbBNpGuOPy09szpmCufD6t4CL46fAi/LjBrA==",
+      "type": "package",
+      "path": "geocoordinate.netcore/1.0.0.1",
+      "files": [
+        "geocoordinate.netcore.1.0.0.1.nupkg.sha512",
+        "geocoordinate.netcore.nuspec",
+        "lib/netstandard1.6/GeoCoordinate.NetCore.deps.json",
+        "lib/netstandard1.6/GeoCoordinate.NetCore.dll"
       ]
     },
     "Libuv/1.10.0": {
@@ -12706,6 +12743,8 @@
     ".NETCoreApp,Version=v2.0": [
       "AutoMapper >= 6.2.0",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 3.1.0",
+      "GeoCoordinate >= 2.0.1",
+      "GeoCoordinate.NetCore >= 1.0.0.1",
       "Microsoft.AspNetCore.All >= 2.0.0",
       "Microsoft.NETCore.App >= 2.0.0",
       "Swashbuckle.AspNetCore >= 1.0.0"
@@ -12759,6 +12798,10 @@
             "target": "Package",
             "version": "3.1.0"
           },
+          "GeoCoordinate": {
+            "target": "Package",
+            "version": "2.0.1"
+          },
           "Microsoft.NETCore.App": {
             "target": "Package",
             "version": "2.0.0",
@@ -12775,6 +12818,10 @@
           "Microsoft.AspNetCore.All": {
             "target": "Package",
             "version": "2.0.0"
+          },
+          "GeoCoordinate.NetCore": {
+            "target": "Package",
+            "version": "1.0.0.1"
           }
         },
         "imports": [
