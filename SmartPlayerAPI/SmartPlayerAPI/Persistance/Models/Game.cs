@@ -13,6 +13,8 @@ namespace SmartPlayerAPI.Persistance.Models
         public DateTimeOffset TimeOfStart { get; set; }
         public virtual Club Club { get; set; }
         public int ClubId { get; set; }
+        public virtual Pitch Pitch { get; set; }
+        public int? PitchId { get; set; }
         public virtual ICollection<PlayerInGame> PlayerInGames { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace SmartPlayerAPI.Persistance
         public DbSet<Mock> Mock { get; set; }
         public DbSet<GPSLocation> GPSLocation { get; set; }
         public DbSet<Module> Module { get; set; }
+        public DbSet<Pitch> Pitch { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
