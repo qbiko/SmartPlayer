@@ -11,13 +11,13 @@ namespace SmartPlayerAPI.ViewModels.Sensors.GPS
     }
     public class Point
     {
-        public double? Lat { get; set; }
-        public double? Lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
     public class PointWithCredentials: GPSPlayerInGame
     {
-        public double? Lat { get; set; }
-        public double? Lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
     public class GPSViewModel 
     {
@@ -28,5 +28,16 @@ namespace SmartPlayerAPI.ViewModels.Sensors.GPS
     {
         public int PlayerId { get; set; }
         public int GameId { get; set; }
+    }
+
+    public class GPSPlayerInGameInTime : GPSPlayerInGame
+    {
+        public string StartDateString { get; set; }
+    }
+    public class CartesianPointsInTime
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public DateTimeOffset TimeOfOccur { get; set; }
     }
 }

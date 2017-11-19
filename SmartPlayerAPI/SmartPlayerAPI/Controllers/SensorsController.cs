@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using SmartPlayerAPI.Extensions;
 using System.Runtime.InteropServices;
 using System.Linq.Expressions;
+using SmartPlayerAPI.Repository.Locations;
+using SmartPlayerAPI.ViewModels.Pitch;
 
 namespace SmartPlayerAPI.Controllers
 {
@@ -25,12 +27,15 @@ namespace SmartPlayerAPI.Controllers
         private readonly IPlayerInGameRepository _playerInGameRepository;
         private readonly IModuleRepository _moduleRepository;
         private readonly IMapper _mapper;
+        private readonly IPitchRepository _pitchRepository;
+        private readonly GPSService _gpsService;
         public SensorsController(SmartPlayerContext smartPlayerContext,
             IAccelerometerAndGyroscopeRepository accelerometerAndGyroscopeRepository,
             IGPSLocationRepository gpsLocationRepository,
             IPlayerInGameRepository playerInGameRepository,
             IModuleRepository moduleRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IPitchRepository pitchRepository)
         {
             _smartPlayerContext = smartPlayerContext;
             _accelerometerAndGyroscopeRepository = accelerometerAndGyroscopeRepository;
@@ -38,6 +43,8 @@ namespace SmartPlayerAPI.Controllers
             _playerInGameRepository = playerInGameRepository;
             _moduleRepository = moduleRepository;
             _mapper = mapper;
+            _pitchRepository = pitchRepository;
+            _gpsService = new GPSService();
         }
 
         [HttpPost("pulse")]
@@ -226,35 +233,71 @@ namespace SmartPlayerAPI.Controllers
         [ProducesResponseType(401)]
         public async Task<IActionResult> SaveLocation([FromBody]PointWithCredentials viewModel)
         {
-            var playerInGame = await _playerInGameRepository.FindByCriteria(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId);
-            if (playerInGame == null)
-                return BadRequest("Bad playerId or gameId");
+            try
+            {
+                var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId, i => i.Game);
+                if (playerInGame == null)
+                    return BadRequest("Bad playerId or gameId");
 
-            var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.UtcNow, PlayerInGameId = playerInGame.Id });
-            if (location == null)
-                return BadRequest("Error during saving location coordinates in database");
+                var pitchId = playerInGame.Game.PitchId;
+                if (pitchId == null)
+                    return BadRequest("Pitch is not recognized or null");
 
-            return Ok();
+                var pitch = await _pitchRepository.FindById(pitchId.GetValueOrDefault());
+                if (pitch == null)
+                    return BadRequest("Pitch is not recognized or null");
 
+                var pitchCornersPoints = _mapper.Map<PitchCornersPoints>(pitch);
+                if (pitchCornersPoints == null)
+                    return BadRequest("error in mapping");
+
+                if (viewModel.Lat == null || viewModel.Lng == null)
+                    return BadRequest("lat or lng is null");
+
+                var xy = _gpsService.GetCartesianPoint(pitchCornersPoints, new GPSPoint(viewModel.Lat, viewModel.Lng));
+                if (xy == null || double.IsNaN(xy.X) || double.IsNaN(xy.Y) || double.IsInfinity(xy.X) || double.IsInfinity(xy.Y))
+                    return BadRequest("cannot calculate distance between points. Value is Nan or infinity");
+
+                var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = viewModel.Lat, Lng = viewModel.Lng, TimeOfOccur = DateTimeOffset.UtcNow, PlayerInGameId = playerInGame.Id, X = xy.X, Y = xy.Y });
+                if (location == null)
+                    return BadRequest("Error during saving location coordinates in database");
+
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return BadRequest("something wrong");
+            }
 
         }
 
-        [HttpGet("locationsForPlayer")]
-        [ProducesResponseType(200, Type = typeof(List<PointInTime>))]
+        [HttpGet("locationsBatch")]
+        [ProducesResponseType(200, Type = typeof(List<CartesianPointsInTime>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetLocationsForPlayer([FromBody]GPSPlayerInGame viewModel)
+        public async Task<IActionResult> GetLocationsBatch(int playerId, int gameId, string startDateString)
         {
-            var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == viewModel.PlayerId && i.GameId == viewModel.GameId, i => i.GPSLocations);
-            var listOfCoordinates = playerInGame.GPSLocations.ToList();
-            var responseList = new List<PointInTime>();
-            foreach (var point in listOfCoordinates)
+            try
             {
-                responseList.Add(_mapper.Map<PointInTime>(point));
-            }
- 
-            return Ok(responseList);
+                DateTimeOffset startDate;
+                if (!DateTimeOffset.TryParse(startDateString, out startDate))
+                    return BadRequest("Bad format of startDateString, cannot parse");
 
+                var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == playerId && i.GameId == gameId, i => i.GPSLocations);
+                if (playerInGame == null)
+                    return BadRequest("Bad playerId or gameId");
+
+                var listOfCoordinates = playerInGame.GPSLocations
+                    .Where(i => i.TimeOfOccur >= startDate)
+                    .OrderBy(i => i.TimeOfOccur)
+                    .Select(i => new CartesianPointsInTime() { X = i.X, Y = i.Y, TimeOfOccur = i.TimeOfOccur });
+                   
+                return Ok(listOfCoordinates);
+            }
+            catch(Exception e)
+            {
+                return BadRequest("something wrong");
+            }
         }
     }
 }

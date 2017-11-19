@@ -58,6 +58,9 @@ namespace SmartPlayerAPI
                 ctx.CreateMap<Pitch, PitchOut>();
                 ctx.CreateMap<PitchIn, Pitch>();
 
+                ctx.CreateMap<Pitch, PitchCornersPoints>();
+              
+
             }, assemblies: Enumerable.Empty<Assembly>());
             //Configure db
             services.AddDbContextPool<SmartPlayerContext>(o =>
