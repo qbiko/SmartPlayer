@@ -11,9 +11,10 @@ using System;
 namespace SmartPlayerAPI.Migrations
 {
     [DbContext(typeof(SmartPlayerContext))]
-    partial class SmartPlayerContextModelSnapshot : ModelSnapshot
+    [Migration("20171119140137_RelationsWithPitches")]
+    partial class RelationsWithPitches
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,6 +133,32 @@ namespace SmartPlayerAPI.Migrations
                     b.HasIndex("ClubId");
 
                     b.ToTable("Module");
+                });
+
+            modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Pitch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("LeftDownPoint");
+
+                    b.Property<string>("LeftUpPoint");
+
+                    b.Property<string>("NameOfPitch");
+
+                    b.Property<string>("RightDownPoint");
+
+                    b.Property<string>("RightUpPoint");
+
+                    b.Property<string>("Street");
+
+                    b.Property<string>("Zip");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pitch");
                 });
 
             modelBuilder.Entity("SmartPlayerAPI.Persistance.Models.Player", b =>
