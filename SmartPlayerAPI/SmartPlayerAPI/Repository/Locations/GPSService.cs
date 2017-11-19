@@ -8,10 +8,10 @@ namespace SmartPlayerAPI.Repository.Locations
 {
     public class GPSService
     {
-        public double GetDistanceBeetweenPoints(double lat, double lng)
+        public double GetDistanceBeetweenPoints(GPSPoint point1, GPSPoint point2)
         {
-            GeoCoordinate leadCoordinate = new GeoCoordinate(54.377852, 18.607646);
-            GeoCoordinate activityCoordinate = new GeoCoordinate(54.377355, 18.609406);
+            GeoCoordinate leadCoordinate = new GeoCoordinate(point1.Lat, point1.Lng);
+            GeoCoordinate activityCoordinate = new GeoCoordinate(point2.Lat, point2.Lng);
             var distance = leadCoordinate.GetDistanceTo(activityCoordinate);
             return distance;
         }
