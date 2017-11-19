@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8"><html>
+  <meta charset="UTF-8">
+  <meta http-equiv='cache-control' content='no-cache'>
+  <meta http-equiv='expires' content='0'>
+  <meta http-equiv='pragma' content='no-cache'>
   <title>Match View</title>
   <link rel="stylesheet" type="text/css" href="css/styles.css" />
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="js/match_view.js"></script>
+  <script src="js/smoothie.js"></script>
 </head>
 
 <body>
@@ -15,21 +19,162 @@
         <h1 id="clubName"></h1>
         <hr class="leftHr">
         <div id="playersOnField">
-          <span class="badge">1</span>
-          <span class="badge">2</span>
-          <span class="badge">3</span>
         </div>
         <div id="field"></div>
+        <form id="fieldsForm" onsubmit="return false">
+            <select id="fields">
+            </select>
+            <button id="chooseFieldButton" onclick="choosePitch()" type="submit" class="button primary">Wybierz boisko</button>
+            <a id="addPitchButton" class="button secondary" onclick="openAddPitchWindow()" href="#">Dodaj nowe</a>
+        </form>
+        <hr class="leftHr">
+        <canvas id="ekgGraph" width="683" height="148"></canvas>
+        <script>
+        var delay =10000;
+
+        /*var smoothie = new SmoothieChart();
+        var timeSeries = new TimeSeries();
+        chart.addTimeSeries(timeSeries, { strokeStyle: 'red', lineWidth: 3 });
+        chart.streamTo(document.getElementById('chart'), 100);*/
+        function myYRangeFunction(range) {
+          var min = 400;
+          var max = 800;
+          return {min: min, max: max};
+        }
+
+
+        var smoothie = new SmoothieChart({
+          interpolation:'linear',
+          yRangeFunction:myYRangeFunction,
+          grid: {
+            strokeStyle: 'rgb(255, 0,0)',
+            //fillStyle: 'rgb(240,255,255)',
+            fillStyle: 'rgb(255,255,255)',
+            lineWidth: 1,
+            millisPerLine: 250,
+            verticalSections: 12
+          },
+          labels: {
+            fillStyle: 'rgb(100, 100, 100)'
+          }
+        });
+        var i =0;
+        //actual command to stream the chart to the canvas
+        smoothie.streamTo(document.getElementById("ekgGraph"));
+
+        //Dynamically resize the canvase to fit the frame
+        //var width=mycanvas.scrollWidth();
+        //var height=mycanvas.scrollHeight();
+
+        // Data
+        var line1 = new TimeSeries();
+        var lastDate = new Date();
+
+        // Add a random value to each line every second
+
+
+        // Add to SmoothieChart
+        //smoothie.addTimeSeries(line1);
+        //smoothie.addTimeSeries(line2);
+
+        /*setInterval(
+          function() {
+            i++;
+            var players = document.getElementById("players");
+            var xhr = new XMLHttpRequest();
+            //var urlForGet = "http://inzynierkawebapi.azurewebsites.net/api/Sensors/pulseBatchWithStartDate" + "?playerId=" + players.children[players.selectedIndex].value + "&gameId=" + sessionStorage.getItem('gameId')
+            //+ "&startDateString=" + JSON.stringify(lastDate).replace(/:/g, "%3A").replace(/\+/g, "%2B").replace(/\"/g, "");
+            var urlForGet = "http://inzynierkawebapi.azurewebsites.net/api/Sensors/pulseBatchWithStartDate" + "?playerId="
+             + 5 + "&gameId=" + 26 + "&startDateString=" + JSON.stringify(lastDate).replace(/:/g, "%3A").replace(/\+/g, "%2B").replace(/\"/g, "");
+            xhr.open("GET", urlForGet, true);
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.send();
+            xhr.onreadystatechange = function () { //Call a function when the state changes.
+              if (xhr.readyState == 4 && xhr.status == 200) {
+                obj = JSON.parse(xhr.responseText);
+                for(var i = 0; i < obj.length; i++){
+                  var datka = new Date(obj[i].timeOfOccur);
+                  var czas = (delay/1000)+10;
+                  czas = datka.setSeconds(datka.getSeconds() + czas);
+                  var nowaDatka = datka.getTime();
+                  line1.append(nowaDatka, obj[i].value);
+                  smoothie.addTimeSeries(line1, {
+                    strokeStyle: 'rgb(0,0,0)',
+                    lineWidth: 3
+                  });
+                  smoothie.streamTo(document.getElementById("ekgGraph")  );
+                }
+                lastDate = new Date(obj[obj.length-1].timeOfOccur);
+              //add some delay
+
+              }
+            }
+
+          }, delay);*/
+
+          var i = 0;
+
+          setInterval(
+            function() {
+              i++;
+              var players = document.getElementById("players");
+              var xhr = new XMLHttpRequest();
+              //var urlForGet = "http://inzynierkawebapi.azurewebsites.net/api/Sensors/pulseBatchWithStartDate" + "?playerId=" + players.children[players.selectedIndex].value + "&gameId=" + sessionStorage.getItem('gameId')
+              //+ "&startDateString=" + JSON.stringify(lastDate).replace(/:/g, "%3A").replace(/\+/g, "%2B").replace(/\"/g, "");
+              var urlForGet = "http://inzynierkawebapi.azurewebsites.net/api/Sensors/pulseBatch" + "?playerId="
+               + 5 + "&gameId=" + 26;
+              xhr.open("GET", urlForGet, true);
+              xhr.setRequestHeader('Accept', 'application/json');
+              xhr.send();
+              xhr.onreadystatechange = function () { //Call a function when the state changes.
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                  obj = JSON.parse(xhr.responseText);
+                  line1.append(new Date().getTime(), obj[i].value);
+                  smoothie.addTimeSeries(line1, {
+                    strokeStyle: 'rgb(0,0,0)',
+                    lineWidth: 3
+                  });
+                  smoothie.streamTo(document.getElementById("ekgGraph")  /*delay*/ );
+                  i++;
+                }
+                //add some delay
+
+              }
+
+            }, delay);
+
+          Date.prototype.toJSON = function () {
+            var timezoneOffsetInHours = -(this.getTimezoneOffset() / 60); //UTC minus local time
+            var sign = timezoneOffsetInHours >= 0 ? '+' : '-';
+            var leadingZero = (timezoneOffsetInHours < 10) ? '0' : '';
+
+            //It's a bit unfortunate that we need to construct a new Date instance
+            //(we don't want _this_ Date instance to be modified)
+            var correctedDate = new Date(this.getFullYear(), this.getMonth(),
+                this.getDate(), this.getHours(), this.getMinutes(), this.getSeconds(),
+                this.getMilliseconds());
+            correctedDate.setHours(this.getHours() + timezoneOffsetInHours);
+            var iso = correctedDate.toISOString().replace('Z', '');
+
+            return iso + sign + leadingZero + Math.abs(timezoneOffsetInHours).toString() + ':00';
+          }
+
+
+</script>
       </div>
       <div class="medium-6 large-2 cell">
         <div class="button-group buttonsMenu">
-          <a class="button expanded disabled">Wystartuj mecz</a>
-          <a class="button expanded secondary disabled">Zakończ mecz</a>
+          <a id="newGame" onclick="createGame()" class="button expanded success disabled">Nowy mecz</a>
+          <a id="startGame" class="button expanded disabled">Wystartuj mecz</a>
+          <a id="finishGame" class="button expanded secondary disabled">Zakończ mecz</a>
         </div>
         <div class="button-group buttonsMenu">
-          <a class="button expanded success">Dodaj zawodnika</a>
-          <a class="button expanded secondary disabled">Edytuj zawodnika</a>
-          <a class="button expanded alert disabled">Usuń zawodnika</a>
+          <a id="addPlayer" onclick="openAddPlayerWindow()" class="button expanded success disabled">Dodaj zawodnika</a>
+          <a id="editPlayer" class="button expanded secondary disabled">Edytuj zawodnika</a>
+          <a id="removePlayer" onclick="removePlayer()" class="button expanded alert disabled">Usuń zawodnika</a>
+        </div>
+        <div class="button-group buttonsMenu">
+          <a id="addModule" onclick="openAddModuleWindow()" class="button expanded">Dodaj moduł</a>
         </div>
       </div>
       <div id="rightPanel" class="medium-6 large-4 cell">
@@ -37,13 +182,29 @@
           <form id="playersForm">
             <label>Lista zawodników
               <select id="players" size="18">
-                <option value="chodorowski">1. Jakub Chodorowski</option>
               </select>
             </label>
           </form>
         </div>
+        <hr class="leftHr">
+        <div id="playerDetails" class="grid-x is-hidden">
+          <div class="cell"><h4 id="playerName"></h4></div>
+          <div class="small-6 cell">
+            <p>Wiek: <span class="details" id="age"></span></p>
+            <p>Pozycja: <span class="details" id="position"></span></p>
+            <p>Przebyte km: <span class="details" id="kilometres"></span></p>
+          </div>
+          <div id="rightPlayersDetails" class="small-6 cell">
+            <p>Waga: <span class="details" id="weight"></span></p>
+            <p>Wzrost: <span class="details" id="height"></span></p>
+            <p>Spalone kalorie: <span class="details" id="burningCalories"></span></p>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+  <div id="createAnimation" class="grid-x is-hidden">
+    <div class="cell"><div class="preloader"></div></div>
   </div>
 </body>
 </html>

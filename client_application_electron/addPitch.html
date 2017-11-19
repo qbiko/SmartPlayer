@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dodawanie boiska</title>
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/addPitch.js"></script>
+</head>
+
+<body>
+  <form id="addPitchForm" onsubmit="return false">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div id="statusMessage" class="medium-12 cell callout success is-hidden">
+          <p class="text-center">Nowe boisko dodane.</p>
+        </div>
+        <div class="medium-12 cell">
+          <label>Nazwa:
+            <input type="text" required="required" id="pitchName" name="Nazwa" placeholder="Nazwa">
+          </label>
+          <span class="withoutMargin" id="pitchNameMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Kod pocztowy:
+            <input type="text" pattern="[0-9]{2}\-[0-9]{3}" required="required" id="zipCode" name="Kod pocztowy" placeholder="Kod pocztowy">
+          </label>
+          <span class="withoutMargin" id="zipCodeMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Miasto:
+            <input type="text" required="required" id="city" name="Miasto" placeholder="Miasto">
+          </label>
+          <span class="withoutMargin" id="cityMessage"></span>
+        </div>
+        <div class="medium-12 cell">
+          <label>Ulica:
+            <input type="text" required="required" id="street" name="Ulica" placeholder="Ulica">
+          </label>
+          <span class="withoutMargin" id="streetMessage"></span>
+        </div>
+        <div class="medium-12 large-6 cell">
+          <div id="backgroundField">
+            <div id="containerField">
+              <div id="lu">
+                <input type="text" pattern="^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}" required="required" id="luLatValue" name="Szerokość geogr." placeholder="Szer. geogr.">
+                <input type="text" pattern="^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}" required="required" id="luLongValue" name="Długość geogr." placeholder="Dł. geogr.">
+              </div>
+              <div id="ld">
+                <input type="text" pattern="^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}" required="required" id="ldLatValue" name="Szerokość geogr." placeholder="Szer. geogr.">
+                <input type="text" pattern="^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}" required="required" id="ldLongValue" name="Długość geogr." placeholder="Dł. geogr.">
+              </div>
+              <div id="ru">
+                <input type="text" pattern="^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}" required="required" id="ruLatValue" name="Szerokość geogr." placeholder="Szer. geogr.">
+                <input type="text" pattern="^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}" required="required" id="ruLongValue" name="Długość geogr." placeholder="Dł. geogr.">
+              </div>
+              <div id="rd">
+                <input type="text" pattern="^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}" required="required" id="rdLatValue" name="Szerokość geogr." placeholder="Szer. geogr.">
+                <input type="text" pattern="^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}" required="required" id="rdLongValue" name="Długość geogr." placeholder="Dł. geogr.">
+              </div>
+            </div>
+          </div>
+          <span id="latLongMessage"></span>
+        </div>
+        <div class="medium-12 cell">
+          <div class="expanded button-group">
+            <button onclick="addPitch()" type="submit" class="button primary">Dodaj boisko</button>
+            <a onclick="closeAddPitchWindow()" class="button secondary">Anuluj</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div id="createAnimation" class="grid-x is-hidden">
+    <div class="cell"><div class="preloader"></div></div>
+  </div>
+</body>
+</html>
