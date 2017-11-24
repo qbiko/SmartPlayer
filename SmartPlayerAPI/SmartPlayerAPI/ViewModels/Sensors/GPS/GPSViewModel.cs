@@ -14,12 +14,12 @@ namespace SmartPlayerAPI.ViewModels.Sensors.GPS
         public double Lat { get; set; }
         public double Lng { get; set; }
     }
-    public class PointWithCredentials: GPSPlayerInGame
+    public class PointWithCredentials : GPSPlayerInGame
     {
         public double Lat { get; set; }
         public double Lng { get; set; }
     }
-    public class GPSViewModel 
+    public class GPSViewModel
     {
         public string ModuleMac { get; set; }
     }
@@ -40,9 +40,28 @@ namespace SmartPlayerAPI.ViewModels.Sensors.GPS
         public double Y { get; set; }
         public DateTimeOffset TimeOfOccur { get; set; }
     }
-    public class GPSBatch
+
+    public class GeoPointsInTime
+    {
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+        public double TimeOfOccurLong { get; set; }
+    }
+
+    public class GPSSensorInBatch
+    {
+        public int Value { get; set; }
+        public double TimeOfOccurLong { get; set; }
+    }
+
+    public class GPSBatch<T>
     {
         public int PlayerId { get; set; }
-        public List<CartesianPointsInTime> ListOfPositions { get; set; } = new List<CartesianPointsInTime>();
+        public int GameId { get; set; }
+        public List<T> ListOfPositions { get; set; } = new List<T>();
+
     }
+
+
+
 }

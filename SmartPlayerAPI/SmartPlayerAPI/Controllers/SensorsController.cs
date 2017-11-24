@@ -28,6 +28,7 @@ namespace SmartPlayerAPI.Controllers
         private readonly IModuleRepository _moduleRepository;
         private readonly IMapper _mapper;
         private readonly IPitchRepository _pitchRepository;
+        private readonly IGameRepository _gameRepository;
         private readonly GPSService _gpsService;
         public SensorsController(SmartPlayerContext smartPlayerContext,
             IAccelerometerAndGyroscopeRepository accelerometerAndGyroscopeRepository,
@@ -35,7 +36,8 @@ namespace SmartPlayerAPI.Controllers
             IPlayerInGameRepository playerInGameRepository,
             IModuleRepository moduleRepository,
             IMapper mapper,
-            IPitchRepository pitchRepository)
+            IPitchRepository pitchRepository,
+            IGameRepository gameRepository)
         {
             _smartPlayerContext = smartPlayerContext;
             _accelerometerAndGyroscopeRepository = accelerometerAndGyroscopeRepository;
@@ -44,6 +46,7 @@ namespace SmartPlayerAPI.Controllers
             _moduleRepository = moduleRepository;
             _mapper = mapper;
             _pitchRepository = pitchRepository;
+            _gameRepository = gameRepository;
             _gpsService = new GPSService();
         }
 
@@ -90,20 +93,80 @@ namespace SmartPlayerAPI.Controllers
                 {
                     return BadRequest("Bad Game or PlayerId");
                 }
+                var game = await _gameRepository.FindById(pulseSensorIn.GameId);
+                if (game == null)
+                    return BadRequest("Bad game id");
 
                 PulseSensorBatch<PulseSensorOutBatch> result = new PulseSensorBatch<PulseSensorOutBatch>();
                 result.PlayerId = pulseSensorIn.PlayerId;
                 result.GameId = pulseSensorIn.GameId;
                 foreach (var p in pulseSensorIn.PulseList)
                 {
+                    var time = game.TimeOfStart.AddMilliseconds(p.TimeOfOccurLong);
                     var res =  await _smartPlayerContext.AddAsync(new PulseSensorResult()
                     {
                         Value = p.Value,
-                        TimeOfOccur = p.TimeOfOccur,
-                        PlayerInGameId = playerInGame.Id
+                        TimeOfOccur = time,
+                        PlayerInGameId = playerInGame.Id,
+                        
                     });
                     await _smartPlayerContext.SaveChangesAsync();
-                    result.PulseList.Add(new PulseSensorOutBatch() {  Id = res.Entity.Id, TimeOfOccur = p.TimeOfOccur, Value = p.Value});
+                    result.PulseList.Add(new PulseSensorOutBatch() {  Id = res.Entity.Id, TimeOfOccur = time, Value = p.Value});
+                }
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("locationBatch")]
+        [ProducesResponseType(200, Type = typeof(GPSBatch<CartesianPointsInTime>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> SaveGPSBatch([FromBody]GPSBatch<GeoPointsInTime> locationBatch)
+        {
+            try
+            {
+                var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == locationBatch.PlayerId && i.GameId == locationBatch.GameId, i => i.Game);
+                if (playerInGame == null)
+                    return BadRequest("Bad playerId or gameId");
+
+                var pitchId = playerInGame.Game.PitchId;
+                if (pitchId == null)
+                    return BadRequest("Pitch is not recognized or null");
+
+                var pitch = await _pitchRepository.FindById(pitchId.GetValueOrDefault());
+                if (pitch == null)
+                    return BadRequest("Pitch is not recognized or null");
+
+                var pitchCornersPoints = _mapper.Map<PitchCornersPoints>(pitch);
+                if (pitchCornersPoints == null)
+                    return BadRequest("error in mapping");
+
+                var game = await _gameRepository.FindById(locationBatch.GameId);
+                if (game == null)
+                    return BadRequest("Bad game id");
+
+                GPSBatch<CartesianPointsInTime> result = new GPSBatch<CartesianPointsInTime>();
+                result.PlayerId = locationBatch.PlayerId;
+                result.GameId = locationBatch.GameId;
+                foreach (var p in locationBatch.ListOfPositions)
+                {
+                    var time = game.TimeOfStart.AddMilliseconds(p.TimeOfOccurLong);
+
+                    if (p.Lat == null || p.Lng == null)
+                        return BadRequest("lat or lng is null");
+
+                    var xy = _gpsService.GetCartesianPoint(pitchCornersPoints, new GPSPoint(p.Lat, p.Lng));
+                    if (xy == null || double.IsNaN(xy.X) || double.IsNaN(xy.Y) || double.IsInfinity(xy.X) || double.IsInfinity(xy.Y))
+                        return BadRequest("cannot calculate distance between points. Value is Nan or infinity");
+
+                    var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = p.Lat, Lng = p.Lng, TimeOfOccur = game.TimeOfStart.AddMilliseconds(p.TimeOfOccurLong), PlayerInGameId = playerInGame.Id, X = xy.X, Y = xy.Y });
+                    if (location == null)
+                        return BadRequest("Error during saving location coordinates in database");
                 }
 
                 return Ok(result);
@@ -272,7 +335,7 @@ namespace SmartPlayerAPI.Controllers
         }
 
         [HttpGet("locationsBatch")]
-        [ProducesResponseType(200, Type = typeof(List<GPSBatch>))]
+        [ProducesResponseType(200, Type = typeof(List<GPSBatch<CartesianPointsInTime>>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         public async Task<IActionResult> GetLocationsBatch(int gameId, string startDateString, params int[] playerIds)
@@ -283,7 +346,7 @@ namespace SmartPlayerAPI.Controllers
                 if (!DateTimeOffset.TryParse(startDateString, out startDate))
                     return BadRequest("Bad format of startDateString, cannot parse");
 
-                var gpsBatch = new List<GPSBatch>();
+                var gpsBatch = new List<GPSBatch<CartesianPointsInTime>>();
                 foreach(var playerId in playerIds)
                 {
                     var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == playerId && i.GameId == gameId, i => i.GPSLocations);
@@ -296,7 +359,7 @@ namespace SmartPlayerAPI.Controllers
                         .Select(i => new CartesianPointsInTime() { X = i.X, Y = i.Y, TimeOfOccur = i.TimeOfOccur })
                         .ToList();
 
-                    gpsBatch.Add(new GPSBatch() { PlayerId = playerId, ListOfPositions = listOfCoordinates });
+                    gpsBatch.Add(new GPSBatch<CartesianPointsInTime>() { PlayerId = playerId, GameId = gameId, ListOfPositions = listOfCoordinates });
                 }
 
                 return Ok(gpsBatch);

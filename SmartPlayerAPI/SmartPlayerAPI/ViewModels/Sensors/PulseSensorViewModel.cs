@@ -35,11 +35,12 @@ namespace SmartPlayerAPI.ViewModels
     public class PulseSensorInBatch
     {
         public int Value { get; set; }
-        public DateTimeOffset TimeOfOccur { get; set; }
+        public double TimeOfOccurLong { get; set; }
     }
 
     public class PulseSensorOutBatch : PulseSensorInBatch
     {
+        public DateTimeOffset TimeOfOccur { get; set; }
         public int Id { get; set; }
     }
     public class PulseSensorBatch<T>
