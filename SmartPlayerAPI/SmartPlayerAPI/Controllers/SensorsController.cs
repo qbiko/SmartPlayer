@@ -111,7 +111,7 @@ namespace SmartPlayerAPI.Controllers
                         
                     });
                     await _smartPlayerContext.SaveChangesAsync();
-                    result.PulseList.Add(new PulseSensorOutBatch() {  Id = res.Entity.Id, TimeOfOccur = time, Value = p.Value});
+                    result.PulseList.Add(new PulseSensorOutBatch() {  Id = res.Entity.Id, TimeOfOccur = time, Value = p.Value, TimeOfOccurLong = p.TimeOfOccurLong});
                 }
 
                 return Ok(result);
