@@ -186,3 +186,19 @@ h1#clubName {
 .withoutMargin {
   margin: 0;
 }
+
+#fieldContainer {
+  position: relative;
+  width: 601px;
+  height: 389px;
+  left: 46px;
+  top: 0;
+}
+
+#playersOnField input[type="checkbox"] {
+  position: absolute;
+  z-index: -1000;
+  left: -1000px;
+  overflow: hidden;
+  margin-left: 0;
+}

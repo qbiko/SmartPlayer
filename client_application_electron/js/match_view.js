@@ -29,6 +29,50 @@ function init(){
     if(document.getElementById("playerDetails").classList.contains("is-hidden")) document.getElementById("playerDetails").classList.remove("is-hidden");
   }
 
+  setInterval(
+    function() {
+      var playersIds = [];
+      var k = 0;
+      var fieldContainer = document.getElementById("fieldContainer");
+      for(var j=0; j<fieldContainer.childNodes.length; j++) {
+        if(!fieldContainer.children[j].classList.contains("is-hidden")){
+          playersIds[k] = fieldContainer.children[j].getAttribute('id').replace("badge-on-field-", "");
+          k++;
+        }
+      }
+      var players = document.getElementById("players");
+      var xhr = new XMLHttpRequest();
+      var urlForGet = "http://inzynierkawebapi.azurewebsites.net/api/Sensors/locationsBatch" + "?gameId=" + sessionStorage.getItem('gameId') + "&startDateString="
+      + JSON.stringify(lastDate).replace(/:/g, "%3A").replace(/\+/g, "%2B").replace(/\"/g, "") + "&playerIds=" + playersIds.toString();
+      xhr.open("GET", urlForGet, true);
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.send();
+      xhr.onreadystatechange = function () { //Call a function when the state changes.
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          obj = JSON.parse(xhr.responseText);
+          for(var i=0;i<obj.length;i++){
+            for(var j=0;j<obj[i].listOfPositions.length;j++){
+              var timeout = 0;
+              if(j!=0) timeout = new Date(obj[i].listOfPositions[j].timeOfOccur).getTime() - new Date(obj[i].listOfPositions[j-1].timeOfOccur).getTime();
+              setTimeout(setPosition(obj[i].listOfPositions[j].x, obj[i].listOfPositions[j].y, obj[i].playerId),timeout);
+            }
+            var dateFromDB = new Date(obj[i].listOfPositions[obj[i].listOfPositions.length-1].timeOfOccur);
+            if(dateFromDB.getTime()>lastDate.getTime()){
+              lastDate=dateFromDB;
+            }
+          }
+          //document.getElementById("badge-on-field-3").setAttribute("style", "position: absolute; top: "+ obj[0].listOfPositions[1].y + "px; left: " + obj[0].listOfPositions[1].x+"px;");
+
+        }
+
+      }
+
+    }, 10000);
+
+    function setPosition(x,y,playerId){
+      document.getElementById("badge-on-field-" + playerId).setAttribute("style", "position: absolute; top: "+ y + "px; left: " + x +"px;");
+    }
+
 
 
   /*var chart = new SmoothieChart(),
@@ -141,14 +185,18 @@ function refreshPlayerList() {
       var players = document.getElementById("players");
       document.getElementById("playerDetails").classList.add("is-hidden");
       for(var i=0; i<players.options.length; i++){
+        players.options[i].selected = false;
         players.remove(i);
       }
       var playersOnField = document.getElementById("playersOnField");
       while (playersOnField.firstChild) {
           playersOnField.removeChild(playersOnField.firstChild);
       }
+      var fieldContainer = document.getElementById("fieldContainer");
+      while (fieldContainer.firstChild) {
+          fieldContainer.removeChild(fieldContainer.firstChild);
+      }
       if(obj.length>0) {
-        if(obj.length>0){
           document.getElementById("removePlayer").classList.remove("disabled");
           document.getElementById("editPlayer").classList.remove("disabled");
           if(document.getElementById("finishGame").classList.contains("disabled")){
@@ -156,6 +204,10 @@ function refreshPlayerList() {
           }
         }
 
+        for(var i=0; i<players.options.length; i++){
+          players.options[i].selected = false;
+          players.remove(i);
+        }
         for(var i=0; i<obj.length; i++){
           var option = document.createElement("option");
           option.text = obj[i].number + ". " + obj[i].firstname + " " + obj[i].lastname;
@@ -163,17 +215,66 @@ function refreshPlayerList() {
           option.name = obj[i].position;
           players.add(option);
 
+
+
           var span = document.createElement("span");
-          span.setAttribute('class', 'badge');
+          span.setAttribute('class', 'badge secondary');
           var elementID = "badge-" + obj[i].id;
           span.setAttribute('id', elementID);
           span.innerHTML = obj[i].number;
-          document.getElementById("playersOnField").appendChild(span);
+
+
+          var spanOnField = document.createElement("span");
+          spanOnField.setAttribute('class', 'badge');
+          var elementID = "badge-on-field-" + obj[i].id;
+          spanOnField.setAttribute('id', elementID);
+          spanOnField.setAttribute("style", "position: absolute; top: 0px; left: 0px;");
+          spanOnField.innerHTML = obj[i].number;
+          spanOnField.classList.add('is-hidden');
+
+          document.getElementById("fieldContainer").appendChild(spanOnField);
+
+          var input = document.createElement("input");
+          input.type = "checkbox";
+          var playerCheckboxID = "playerCheckboxID-" + obj[i].id;
+          input.setAttribute('id', playerCheckboxID);
+          document.getElementById("playersOnField").appendChild(input); // put it into the DOM
+
+          addListener(input);
+
+          var label = document.createElement("label");
+          label.setAttribute('for', playerCheckboxID);
+
+          label.appendChild(span);
+          document.getElementById("playersOnField").appendChild(label);
         }
-      }
     }
   }
 }
+
+function addListener(input){
+  input.addEventListener('click',function(e){
+    if(input.checked){
+      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-on-field-")).classList.remove("is-hidden");
+      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-")).setAttribute('class', 'badge primary');
+    }
+    else {
+      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-on-field-")).classList.add("is-hidden");
+      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-")).setAttribute('class', 'badge secondary');
+    }
+  })
+}
+
+/*function funkcja(input){
+    if(input.checked){
+      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-on-field-")).classList.remove("is-hidden");
+      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-")).setAttribute('class', 'badge primary');
+    }
+    else {
+      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-on-field-")).classList.add("is-hidden");
+      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-")).setAttribute('class', 'badge secondary');
+    }
+}*/
 
 function refreshFieldsList() {
   var xhr = new XMLHttpRequest();
@@ -254,6 +355,11 @@ function removePlayer() {
   xhr.send();
   xhr.onreadystatechange = function () {
   	if (xhr.readyState == 4 && xhr.status == 200) {
+      var players = document.getElementById("players");
+      for(var i=0; i<players.options.length; i++){
+        players.options[i].selected = false;
+        players.remove(i);
+      }
       refreshPlayerList();
       ekg = false;
   	}
