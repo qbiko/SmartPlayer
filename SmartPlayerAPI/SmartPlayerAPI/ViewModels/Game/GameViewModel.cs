@@ -10,6 +10,7 @@ namespace SmartPlayerAPI.ViewModels
         public string NameOfGame { get; set; }
         public DateTimeOffset TimeOfStart { get; set; }
         public int ClubId { get; set; }
+        public int PitchId { get; set; }
     }
     public class GameViewModelOut : GameViewModelIn
     {

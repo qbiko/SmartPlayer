@@ -33,7 +33,8 @@ namespace SmartPlayerAPI.Controllers
                 {
                     NameOfGame = newGame.NameOfGame,
                     TimeOfStart = newGame.TimeOfStart,
-                    ClubId = newGame.ClubId
+                    ClubId = newGame.ClubId,
+                    PitchId = newGame.PitchId
                 });
 
                 return Ok(game);

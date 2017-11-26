@@ -12,3 +12,5 @@ C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\ob
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\SmartPlayerTests.pdb
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\obj\Debug\netcoreapp2.0\SmartPlayerTests.dll
 C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\obj\Debug\netcoreapp2.0\SmartPlayerTests.pdb
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\SmartPlayerAPI.dll
+C:\Users\Sarne\Dropbox\Inzynierka\SmartPlayer\SmartPlayerAPI\SmartPlayerTests\bin\Debug\netcoreapp2.0\SmartPlayerAPI.pdb

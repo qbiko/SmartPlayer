@@ -17,6 +17,8 @@ using System.Reflection;
 using SmartPlayerAPI.ViewModels.Modules;
 using SmartPlayerAPI.Persistance.Models;
 using SmartPlayerAPI.ViewModels.Sensors.GPS;
+using SmartPlayerAPI.Repository.Locations;
+using SmartPlayerAPI.ViewModels.Pitch;
 
 namespace SmartPlayerAPI
 {
@@ -50,6 +52,15 @@ namespace SmartPlayerAPI
                 ctx.CreateMap<GPSLocation, PointInTime>();
                 ctx.CreateMap<List<Persistance.Models.GPSLocation>, List<PointInTime>>();
 
+                ctx.CreateMap<string, GPSPoint>().ConvertUsing(o => o.Equals(string.Empty) ? new GPSPoint(0, 0) : new GPSPoint(double.Parse(o.Split(',')[0]), double.Parse(o.Split(',')[1])));
+                ctx.CreateMap<GPSPoint, string>().ConvertUsing(o => $"{o.Lat},{o.Lng}");
+
+                ctx.CreateMap<Pitch, PitchOut>();
+                ctx.CreateMap<PitchIn, Pitch>();
+
+                ctx.CreateMap<Pitch, PitchCornersPoints>();
+              
+
             }, assemblies: Enumerable.Empty<Assembly>());
             //Configure db
             services.AddDbContextPool<SmartPlayerContext>(o =>
@@ -62,6 +73,7 @@ namespace SmartPlayerAPI
             services.AddScoped<IPlayerInGameRepository, PlayerInGameRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IPitchRepository, PitchRepository>();
             services.AddMvc();
         }
 

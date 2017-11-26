@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmartPlayerAPI.Repository.Locations;
 
 namespace SmartPlayerTests
 {
@@ -8,10 +9,14 @@ namespace SmartPlayerTests
         [TestMethod]
         public void TestGeoCoordinates()
         {
-            //boisko na strzy?y
-            //GeoCoordinate leadCoordinate = new GeoCoordinate(54.377852, 18.607646);
-            //GeoCoordinate activityCoordinate = new GeoCoordinate(54.377355, 18.609406);
-            //var distance = leadCoordinate.GetDistanceTo(activityCoordinate);
+            var service = new GPSService();
+            var result = service.GetCartesianPoint(new SmartPlayerAPI.ViewModels.Pitch.PitchCornersPoints()
+            {
+                LeftUpPoint = new GPSPoint(54.370416, 18.630052),
+                LeftDownPoint = new GPSPoint(54.370014, 18.629365),
+                RightUpPoint = new GPSPoint(54.369786, 18.631127),
+                RightDownPoint = new GPSPoint(54.369383, 18.630432)
+            }, new GPSPoint(54.369568, 18.630247));
         }
     }
 }

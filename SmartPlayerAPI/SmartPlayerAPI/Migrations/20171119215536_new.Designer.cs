@@ -11,9 +11,10 @@ using System;
 namespace SmartPlayerAPI.Migrations
 {
     [DbContext(typeof(SmartPlayerContext))]
-    partial class SmartPlayerContextModelSnapshot : ModelSnapshot
+    [Migration("20171119215536_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,10 +95,6 @@ namespace SmartPlayerAPI.Migrations
                     b.Property<int>("PlayerInGameId");
 
                     b.Property<DateTimeOffset>("TimeOfOccur");
-
-                    b.Property<double>("X");
-
-                    b.Property<double>("Y");
 
                     b.HasKey("Id");
 

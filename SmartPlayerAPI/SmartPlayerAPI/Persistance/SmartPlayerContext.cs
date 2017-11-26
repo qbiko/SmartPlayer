@@ -22,6 +22,7 @@ namespace SmartPlayerAPI.Persistance
         public DbSet<Mock> Mock { get; set; }
         public DbSet<GPSLocation> GPSLocation { get; set; }
         public DbSet<Module> Module { get; set; }
+        public DbSet<Pitch> Pitch { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,6 +34,7 @@ namespace SmartPlayerAPI.Persistance
             modelBuilder.Entity<Game>().ToTable("Game");
             modelBuilder.Entity<Game>().HasKey(o => o.Id);
             modelBuilder.Entity<Game>().HasOne(o => o.Club).WithMany(o => o.Games);
+            modelBuilder.Entity<Game>().HasOne(o => o.Pitch);
 
             modelBuilder.Entity<Player>().ToTable("Player");
             modelBuilder.Entity<Player>().HasKey(o => o.Id);
@@ -66,6 +68,9 @@ namespace SmartPlayerAPI.Persistance
             modelBuilder.Entity<Module>().HasKey(o => o.Id);
             modelBuilder.Entity<Module>().HasMany(o => o.PlayerInGames).WithOne(i => i.Module);
             modelBuilder.Entity<Module>().HasOne(o => o.Club).WithMany(o => o.Modules);
+
+            modelBuilder.Entity<Pitch>().ToTable("Pitch");
+            modelBuilder.Entity<Pitch>().HasKey(o => o.Id);
         }
     }
 }
