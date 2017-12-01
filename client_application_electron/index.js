@@ -4,6 +4,7 @@ let startScreen;
 let addPlayerScreen;
 let addModuleScreen;
 let addPitchScreen;
+let editPlayerScreen;
 
 app.on('ready', () => {
     startScreen = new BrowserWindow({
@@ -15,6 +16,7 @@ app.on('ready', () => {
         addPlayerScreen.close();
         addModuleScreen.close();
         addPitchScreen.close();
+        editPlayerScreen.close();
         startScreen = null;
     });
 
@@ -37,6 +39,13 @@ app.on('ready', () => {
     addPitchScreen = new BrowserWindow({
         width: 750,
         height: 900,
+        show: false,
+        frame: true //zmienic na false
+    });
+
+    editPlayerScreen = new BrowserWindow({
+        width: 450,
+        height: 800,
         show: false,
         frame: true //zmienic na false
     });
@@ -71,8 +80,22 @@ app.on('ready', () => {
       }
     });
 
+    ipcMain.on('edit-player-window', function () {
+      if (editPlayerScreen.isVisible()){
+        editPlayerScreen.hide()
+      }
+      else{
+        editPlayerScreen.loadURL('file://' + __dirname + '/edit_player.html');
+        editPlayerScreen.show()
+      }
+    });
+
     ipcMain.on('new-player-from-add-window', function () {
       startScreen.webContents.send('new-player-to-match-window');
+    });
+
+    ipcMain.on('player-from-edited-window', function () {
+      startScreen.webContents.send('player-to-edited-window');
     });
 
     ipcMain.on('new-pitch-from-add-window', function () {

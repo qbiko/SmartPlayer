@@ -22,7 +22,7 @@ function login() {
     loginForm.classList.add("is-hidden");
     createAnimation.classList.remove("is-hidden");
     var xhr = new XMLHttpRequest();
-    var urlForGet = "http://inzynierkawebapi.azurewebsites.net/api/Main/login" + "?clubName=" + clubName.value + "&password=" + password.value
+    var urlForGet = REST_API + "/Main/login" + "?clubName=" + clubName.value + "&password=" + password.value
     xhr.open("GET", urlForGet, true);
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.send();

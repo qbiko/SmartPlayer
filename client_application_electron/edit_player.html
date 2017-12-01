@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Edytowanie piłkarza</title>
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/useful_consts_variables.js"></script>
+  <script src="js/edit_player.js"></script>
+</head>
+<body>
+  <form id="editPlayerForm" onsubmit="return false">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div id="statusMessage" class="medium-6 cell callout success is-hidden">
+          <p class="text-center">Zawodnik został edytowany.</p>
+        </div>
+        <div class="medium-6 cell">
+          <label>Imię:
+            <input type="text" id="firstname" name="Imię" placeholder="Imię" readonly>
+          </label>
+        </div>
+        <div class="medium-6 cell">
+          <label>Nazwisko:
+            <input type="text" id="lastname" name="Nazwisko" placeholder="Nazwisko" readonly>
+          </label>
+        </div>
+        <div class="medium-6 cell">
+          <label>Data urodzenia:
+            <input type="text" id="dateOfBirth" name="Data urodzenia" placeholder="Data urodzenia" readonly>
+          </label>
+          <span id="dateOfBirthMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Wzrost (cm):
+            <input type="number" id="height" name="Wzrost" placeholder="Wzrost" min="1" max="300" required>
+          </label>
+          <span id="heightMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <label>Waga (kg):
+            <input type="number" id="weight" name="Waga" placeholder="Waga" min="1" max="300" required>
+          </label>
+          <span id="weightMessage"></span>
+        </div>
+        <div class="medium-6 cell">
+          <div class="expanded button-group">
+            <button onclick="editPlayer()" type="submit" class="button primary">Zatwierdź</button>
+            <a onclick="closeEditPlayerWindow()" class="button secondary">Anuluj</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div id="createAnimation" class="grid-x is-hidden">
+    <div class="cell"><div class="preloader"></div></div>
+  </div>
+</body>
+</html>
