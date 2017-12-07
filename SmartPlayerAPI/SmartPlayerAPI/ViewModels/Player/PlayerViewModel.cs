@@ -19,4 +19,11 @@ namespace SmartPlayerAPI.ViewModels
         public int Id { get; set; }
     }
 
+    public class UpdatePlayer
+    {
+        public int? HeightOfUser { get; set; }
+        public int? WeightOfUser { get; set; }
+        public int PlayerId { get; set; }
+    }
+
 }
