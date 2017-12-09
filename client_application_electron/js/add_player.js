@@ -2,7 +2,6 @@ const {remote, ipcRenderer} = require('electron')
 
 function closeAddPlayerWindow(){
   localStorage.removeItem('clubId');
-  localStorage.removeItem('clubName');
   localStorage.removeItem('gameId');
   ipcRenderer.send('add-player-window');
 }
@@ -113,7 +112,7 @@ function chooseFromList() {
       "playerId": players.options[players.selectedIndex].value,
       "moduleId":modules.options[modules.selectedIndex].value
     }));
-    xhr.onreadystatechange = function () { //Call a function when the state changes.
+    xhr.onreadystatechange = function () {
       if (xhr.readyState == 4 && xhr.status == 200) {
           createAnimation.classList.add("is-hidden");
           chooseFromListForm.classList.remove("is-hidden");

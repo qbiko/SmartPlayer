@@ -55,7 +55,7 @@ app.on('ready', () => {
         addPlayerScreen.hide()
       }
       else{
-        addPlayerScreen.loadURL('file://' + __dirname + '/addPlayer.html');
+        addPlayerScreen.loadURL('file://' + __dirname + '/add_player.html');
         addPlayerScreen.show()
       }
     });

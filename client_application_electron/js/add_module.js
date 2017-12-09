@@ -34,7 +34,7 @@ function addModule() {
       "macAddress": macAddress.value,
       "clubId": localStorage.getItem('clubId')
     }));
-    xhr.onreadystatechange = function () { //Call a function when the state changes.
+    xhr.onreadystatechange = function () {
       if (xhr.readyState == 4 && xhr.status == 200) {
           createAnimation.classList.add("is-hidden");
           addModuleForm.classList.remove("is-hidden");

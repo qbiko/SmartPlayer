@@ -2,8 +2,8 @@ function electrocardiogram(){
   var ekgGraph = document.getElementById('ekgGraph');
 
   function setYRange(range) {
-    var min = 400;
-    var max = 800;
+    var min = 350;
+    var max = 850;
     return {min: min, max: max};
   }
 
@@ -40,7 +40,6 @@ function electrocardiogram(){
           if (xhr.readyState == 4 && xhr.status == 200) {
             obj = JSON.parse(xhr.responseText);
             for(var i = 0; i < obj.length; i++){
-
               var dateFromDB = new Date(obj[i].timeOfOccur);
               var delayForGraph = (DELAY/1000)+10;
               dateFromDB.setSeconds(dateFromDB.getSeconds() + delayForGraph);

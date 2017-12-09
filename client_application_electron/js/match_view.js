@@ -139,13 +139,15 @@ function refreshPlayerList() {
 
 function addListener(input){
   input.addEventListener('click',function(e){
+    var badgeOnFieldId = input.getAttribute('id').replace("playerCheckboxID-", "badge-on-field-");
+    var badgeId = input.getAttribute('id').replace("playerCheckboxID-", "badge-");
     if(input.checked){
-      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-on-field-")).classList.remove("is-hidden");
-      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-")).setAttribute('class', 'badge primary');
+      document.getElementById(badgeOnFieldId).classList.remove("is-hidden");
+      document.getElementById(badgeId).setAttribute('class', 'badge primary');
     }
     else {
-      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-on-field-")).classList.add("is-hidden");
-      document.getElementById(input.getAttribute('id').replace("playerCheckboxID-", "badge-")).setAttribute('class', 'badge secondary');
+      document.getElementById(badgeOnFieldId).classList.add("is-hidden");
+      document.getElementById(badgeId).setAttribute('class', 'badge secondary');
     }
   })
 }
@@ -177,7 +179,6 @@ function refreshFieldsList() {
 
 function openAddPlayerWindow(){
   localStorage.setItem('clubId', sessionStorage.getItem('clubId'));
-  localStorage.setItem('clubName', sessionStorage.getItem('clubName'));
   localStorage.setItem('gameId', sessionStorage.getItem('gameId'));
   ipcRenderer.send('add-player-window');
 }

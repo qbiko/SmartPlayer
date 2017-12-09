@@ -19,7 +19,7 @@ function gpsLocations() {
         xhr.open("GET", urlForGet, true);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.send();
-        xhr.onreadystatechange = function () { //Call a function when the state changes.
+        xhr.onreadystatechange = function () {
           if (xhr.readyState == 4 && xhr.status == 200) {
             obj = JSON.parse(xhr.responseText);
             for(var i=0;i<obj.length;i++){
