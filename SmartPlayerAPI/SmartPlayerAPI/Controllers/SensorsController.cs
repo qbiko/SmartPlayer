@@ -130,7 +130,11 @@ namespace SmartPlayerAPI.Controllers
         {
             try
             {
-                var playerInGame = await _playerInGameRepository.FindWithInclude(i => i.PlayerId == locationBatch.PlayerId && i.GameId == locationBatch.GameId, i => i.Game);
+                var playerInGame = await _playerInGameRepository
+                    .FindWithInclude(i => i.PlayerId == locationBatch.PlayerId &&
+                    i.GameId == locationBatch.GameId,
+                    i => i.Game);
+
                 if (playerInGame == null)
                     return BadRequest("Bad playerId or gameId");
 
@@ -153,6 +157,7 @@ namespace SmartPlayerAPI.Controllers
                 GPSBatch<CartesianPointsInTime> result = new GPSBatch<CartesianPointsInTime>();
                 result.PlayerId = locationBatch.PlayerId;
                 result.GameId = locationBatch.GameId;
+
                 foreach (var p in locationBatch.ListOfPositions)
                 {
                     var time = game.TimeOfStart.AddMilliseconds(p.TimeOfOccurLong);
@@ -161,10 +166,25 @@ namespace SmartPlayerAPI.Controllers
                         return BadRequest("lat or lng is null");
 
                     var xy = _gpsService.GetCartesianPoint(pitchCornersPoints, new GPSPoint(p.Lat, p.Lng));
-                    if (xy == null || double.IsNaN(xy.X) || double.IsNaN(xy.Y) || double.IsInfinity(xy.X) || double.IsInfinity(xy.Y))
+                    if (xy == null ||
+                        double.IsNaN(xy.X) ||
+                        double.IsNaN(xy.Y) ||
+                        double.IsInfinity(xy.X) ||
+                        double.IsInfinity(xy.Y))
+                    {
                         return BadRequest("cannot calculate distance between points. Value is Nan or infinity");
+                    }
 
-                    var location = await GPSLocationRepository.AddAsync(new GPSLocation() { Lat = p.Lat, Lng = p.Lng, TimeOfOccur = game.TimeOfStart.AddMilliseconds(p.TimeOfOccurLong), PlayerInGameId = playerInGame.Id, X = xy.X, Y = xy.Y });
+
+                    var location = await GPSLocationRepository.AddAsync(new GPSLocation() {
+                        Lat = p.Lat,
+                        Lng = p.Lng,
+                        TimeOfOccur = game.TimeOfStart.AddMilliseconds(p.TimeOfOccurLong),
+                        PlayerInGameId = playerInGame.Id,
+                        X = xy.X,
+                        Y = xy.Y
+                    });
+
                     if (location == null)
                         return BadRequest("Error during saving location coordinates in database");
                 }
@@ -266,7 +286,8 @@ namespace SmartPlayerAPI.Controllers
                     .AsQueryable()
                     .Include(i => i.PulseSensorResults)
                     .Include(i=>i.Game)
-                    .SingleOrDefaultAsync(i => i.PlayerId == playerId && i.GameId == gameId )
+                    .SingleOrDefaultAsync(i => i.PlayerId == playerId && 
+                    i.GameId == gameId )
                     .ConfigureAwait(false);
 
                 if (playerInGame == null)
@@ -279,7 +300,12 @@ namespace SmartPlayerAPI.Controllers
                     .ToList()
                     .Where(i => i.TimeOfOccur >= startDate)
                     .OrderBy(i => i.TimeOfOccur)
-                    .Select(i => new PulseSensorViewModel { Id = i.Id, TimeOfOccur = i.TimeOfOccur, Value = i.Value });
+                    .Select(i => new PulseSensorViewModel
+                    {
+                        Id = i.Id,
+                        TimeOfOccur = i.TimeOfOccur,
+                        Value = i.Value
+                    });
 
                 return Ok(list);
             }

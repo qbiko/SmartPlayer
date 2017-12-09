@@ -170,6 +170,38 @@ namespace SmartPlayerAPI.Controllers
 
         }
 
+        [HttpPut]
+        [ProducesResponseType(200, Type = typeof(PlayerViewModelOut))]
+        [ProducesResponseType(400, Type = typeof(Error))]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> UpdatePlayer([FromBody]UpdatePlayer newPlayer)
+        {
+            try
+            {
+                var player = await _smartPlayerContext.Set<Player>().FirstOrDefaultAsync(i=>i.Id == newPlayer.PlayerId);
+                if (player == null)
+                    return BadRequest("bad player id");
+
+                if (newPlayer.HeightOfUser != null)
+                    player.HeighOfUser = newPlayer.HeightOfUser.GetValueOrDefault();
+
+                if (newPlayer.WeightOfUser != null)
+                    player.WeightOfUser = newPlayer.WeightOfUser.GetValueOrDefault();
+
+                var updatedPlayer = _smartPlayerContext.Set<Player>().Update(player);
+                await _smartPlayerContext.SaveChangesAsync();
+                if (updatedPlayer == null)
+                    return BadRequest("something wrong");
+
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return BadRequest("something wrong");
+            }
+
+        }
+
         //[HttpGet("playerInGame")]
         //[ProducesResponseType(200, Type = typeof())]
         //[ProducesResponseType(400, Type = typeof(Error))]
