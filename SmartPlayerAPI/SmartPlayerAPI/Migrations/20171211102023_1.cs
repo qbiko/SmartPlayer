@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SmartPlayerAPI.Migrations
 {
-    public partial class database : Migration
+    public partial class _1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,24 +40,23 @@ namespace SmartPlayerAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Game",
+                name: "Pitch",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClubId = table.Column<int>(type: "int", nullable: false),
-                    NameOfGame = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TimeOfStart = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LeftDownPoint = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LeftUpPoint = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameOfPitch = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RightDownPoint = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RightUpPoint = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Zip = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Game", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Game_Club_ClubId",
-                        column: x => x.ClubId,
-                        principalTable: "Club",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Pitch", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,6 +101,34 @@ namespace SmartPlayerAPI.Migrations
                         principalTable: "Club",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Game",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClubId = table.Column<int>(type: "int", nullable: false),
+                    NameOfGame = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PitchId = table.Column<int>(type: "int", nullable: true),
+                    TimeOfStart = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Game", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Game_Club_ClubId",
+                        column: x => x.ClubId,
+                        principalTable: "Club",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Game_Pitch_PitchId",
+                        column: x => x.PitchId,
+                        principalTable: "Pitch",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,7 +200,9 @@ namespace SmartPlayerAPI.Migrations
                     Lat = table.Column<double>(type: "float", nullable: true),
                     Lng = table.Column<double>(type: "float", nullable: true),
                     PlayerInGameId = table.Column<int>(type: "int", nullable: false),
-                    TimeOfOccur = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    TimeOfOccur = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    X = table.Column<double>(type: "float", nullable: false),
+                    Y = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,6 +245,11 @@ namespace SmartPlayerAPI.Migrations
                 name: "IX_Game_ClubId",
                 table: "Game",
                 column: "ClubId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Game_PitchId",
+                table: "Game",
+                column: "PitchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GPSLocation_PlayerInGameId",
@@ -278,6 +312,9 @@ namespace SmartPlayerAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Player");
+
+            migrationBuilder.DropTable(
+                name: "Pitch");
 
             migrationBuilder.DropTable(
                 name: "Club");

@@ -11,8 +11,8 @@ using System;
 namespace SmartPlayerAPI.Migrations
 {
     [DbContext(typeof(SmartPlayerContext))]
-    [Migration("20171119140137_RelationsWithPitches")]
-    partial class RelationsWithPitches
+    [Migration("20171211102023_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,10 @@ namespace SmartPlayerAPI.Migrations
                     b.Property<int>("PlayerInGameId");
 
                     b.Property<DateTimeOffset>("TimeOfOccur");
+
+                    b.Property<double>("X");
+
+                    b.Property<double>("Y");
 
                     b.HasKey("Id");
 

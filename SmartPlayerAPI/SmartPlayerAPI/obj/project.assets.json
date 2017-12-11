@@ -12778,7 +12778,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://spotiodev.pkgs.visualstudio.com/_packaging/SpotioFeed/nuget/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
@@ -12794,34 +12795,34 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
+          "AutoMapper": {
+            "target": "Package",
+            "version": "[6.2.0, )"
+          },
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
-            "version": "3.1.0"
+            "version": "[3.1.0, )"
           },
           "GeoCoordinate": {
             "target": "Package",
-            "version": "2.0.1"
+            "version": "[2.0.1, )"
+          },
+          "GeoCoordinate.NetCore": {
+            "target": "Package",
+            "version": "[1.0.0.1, )"
+          },
+          "Microsoft.AspNetCore.All": {
+            "target": "Package",
+            "version": "[2.0.0, )"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "2.0.0",
+            "version": "[2.0.0, )",
             "autoReferenced": true
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
-            "version": "1.0.0"
-          },
-          "AutoMapper": {
-            "target": "Package",
-            "version": "6.2.0"
-          },
-          "Microsoft.AspNetCore.All": {
-            "target": "Package",
-            "version": "2.0.0"
-          },
-          "GeoCoordinate.NetCore": {
-            "target": "Package",
-            "version": "1.0.0.1"
+            "version": "[1.0.0, )"
           }
         },
         "imports": [
