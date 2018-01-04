@@ -65,7 +65,7 @@ app.on('ready', () => {
         addModuleScreen.hide()
       }
       else{
-        addModuleScreen.loadURL('file://' + __dirname + '/addModule.html');
+        addModuleScreen.loadURL('file://' + __dirname + '/add_module.html');
         addModuleScreen.show()
       }
     });

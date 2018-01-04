@@ -28,7 +28,7 @@ function addModule() {
     addModuleForm.classList.add("is-hidden");
     createAnimation.classList.remove("is-hidden");
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://inzynierkawebapi.azurewebsites.net/api/controller/add", true);
+    xhr.open("POST", REST_API + "/controller/add", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({
       "macAddress": macAddress.value,

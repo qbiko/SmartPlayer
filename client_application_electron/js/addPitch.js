@@ -53,7 +53,7 @@ function addPitch() {
     addPitchForm.classList.add("is-hidden");
     createAnimation.classList.remove("is-hidden");
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://inzynierkawebapi.azurewebsites.net/api/Pitch", true);
+    xhr.open("POST", REST_API + "/Pitch", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({
       "nameOfPitch": pitchName.value,

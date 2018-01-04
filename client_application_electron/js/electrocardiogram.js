@@ -2,8 +2,8 @@ function electrocardiogram(){
   var ekgGraph = document.getElementById('ekgGraph');
 
   function setYRange(range) {
-    var min = 350;
-    var max = 850;
+    var min = 150;
+    var max = 1000;
     return {min: min, max: max};
   }
 
@@ -18,7 +18,7 @@ function electrocardiogram(){
       verticalSections: 12
     },
     labels: {
-      fillStyle: 'rgb(100, 100, 100)'
+      fillStyle: 'rgb(0, 0, 0)'
     }
   });
 
@@ -46,7 +46,7 @@ function electrocardiogram(){
               var dateForGraph = dateFromDB.getTime();
 
               ekgLine.append(dateForGraph, obj[i].value);
-              smoothie.addTimeSeries(ekgLine);
+              smoothie.addTimeSeries(ekgLine,{lineWidth:2,strokeStyle:'#000000'});
               smoothie.streamTo(ekgGraph);
             }
             lastDateEkg = new Date(obj[obj.length-1].timeOfOccur);

@@ -69,7 +69,7 @@ function addPlayer() {
     addPlayerForm.classList.add("is-hidden");
     createAnimation.classList.remove("is-hidden");
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://inzynierkawebapi.azurewebsites.net/api/Player/create", true);
+    xhr.open("POST", REST_API + "/Player/create", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({
       "firstName": firstname.value,
@@ -101,7 +101,7 @@ function chooseFromList() {
     chooseFromListForm.classList.add("is-hidden");
     createAnimation.classList.remove("is-hidden");
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://inzynierkawebapi.azurewebsites.net/api/Player/addToGame", true);
+    xhr.open("POST", REST_API + "/Player/addToGame", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     var players = document.getElementById("players");
     xhr.send(JSON.stringify({
@@ -125,7 +125,7 @@ function chooseFromList() {
 
 function refreshPlayerList() {
   var xhr = new XMLHttpRequest();
-  var urlForGet = "http://inzynierkawebapi.azurewebsites.net/api/Player/clubplayers" + "?clubId=" + localStorage.getItem('clubId')
+  var urlForGet = REST_API + "/Player/clubplayers" + "?clubId=" + localStorage.getItem('clubId')
   xhr.open("GET", urlForGet, true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.send();
@@ -150,7 +150,7 @@ function refreshPlayerList() {
 
 function refreshModules() {
   var xhr = new XMLHttpRequest();
-  var urlForGet = "http://inzynierkawebapi.azurewebsites.net/api/controller/modules" + "?clubId=" + localStorage.getItem('clubId')
+  var urlForGet = REST_API + "/controller/modules" + "?clubId=" + localStorage.getItem('clubId')
   xhr.open("GET", urlForGet, true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.send();

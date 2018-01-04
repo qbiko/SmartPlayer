@@ -46,7 +46,7 @@ function register() {
     registerForm.classList.add("is-hidden");
     createAnimation.classList.remove("is-hidden");
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://inzynierkawebapi.azurewebsites.net/api/Main/register", true);
+    xhr.open("POST", REST_API + "/Main/register", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({
       "clubName": clubName.value,

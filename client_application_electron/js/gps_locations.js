@@ -29,7 +29,7 @@ function gpsLocations() {
                 setTimeout(setPosition(obj[i].listOfPositions[j].x, obj[i].listOfPositions[j].y, obj[i].playerId),timeout);
               }
               var dateFromDB = new Date(obj[i].listOfPositions[obj[i].listOfPositions.length-1].timeOfOccur);
-              if(dateFromDB.getTime()>lastDate.getTime()){
+              if(dateFromDB.getTime()>lastDateGPS.getTime()){
                 lastDateGPS=dateFromDB;
               }
             }
@@ -41,4 +41,17 @@ function gpsLocations() {
 
 function setPosition(x,y,playerId){
   document.getElementById("badge-on-field-" + playerId).setAttribute("style", "position: absolute; top: "+ y + "px; left: " + x +"px;");
+}
+
+function incrementPosition(playerId){
+  var y = Math.floor((Math.random() * 6) - 3);
+  var x = Math.floor((Math.random() * 5) + 1);
+  var badgeOnField = document.getElementById("badge-on-field-" + playerId);
+  var top = window.getComputedStyle(badgeOnField, null).getPropertyValue("top");
+  var left = window.getComputedStyle(badgeOnField, null).getPropertyValue("left");
+  var topInt = parseInt(top);
+  var leftInt = parseInt(left);
+  var wynikTop = topInt + parseInt(y);
+  var wynikLeft = leftInt + parseInt(x);
+  document.getElementById("badge-on-field-" + playerId).setAttribute("style", "position: absolute; top: "+ wynikTop + "px; left: " + wynikLeft +"px;");
 }

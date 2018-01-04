@@ -1,4 +1,4 @@
-const REST_API = 'http://inzynierkawebapi.azurewebsites.net/api';
+const REST_API = 'http://192.168.43.140/api';
 const DELAY = 10000;
 
 Date.prototype.toJSON = function () {
